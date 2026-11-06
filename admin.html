@@ -47,7 +47,7 @@
                 <h2 class="font-arcade text-arcade-yellow text-xs">CHARGER LA BASE EXISTANTE</h2>
                 <p class="text-xs text-gray-400">Sélectionnez votre fichier <code class="text-arcade-cyan">celebs.js</code> ou laissez charger si hébergé.</p>
             </div>
-            <input type="file" id="fileInput" accept=".js" onchange="loadCurrentFile(event)" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-arcade file:bg-arcade-yellow file:text-black hover:file:bg-white cursor-pointer">
+            <input type="file" id="fileInput" accept=".js,.txt" onchange="loadCurrentFile(event)" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-arcade file:bg-arcade-yellow file:text-black hover:file:bg-white cursor-pointer">
         </div>
 
         <!-- Formulaire de recherche, ajout ou modification -->
@@ -175,22 +175,25 @@
         function parseAndLoadJS(text) {
             try {
                 let content = text.trim();
+                
+                // Si le fichier contient une affectation JS, on isole le contenu entre crochets
                 const firstBracket = content.indexOf('[');
                 const lastBracket = content.lastIndexOf(']');
                 
                 if (firstBracket !== -1 && lastBracket !== -1) {
                     let jsonString = content.substring(firstBracket, lastBracket + 1);
-                    // Nettoyage des virgules superflues qui font planter le parseur
+                    
+                    // Nettoyage sécurisé pour éliminer les virgules superflues en fin de tableau ou d'objet
                     jsonString = jsonString.replace(/,\s*([\]}])/g, '$1');
                     
                     customCelebrities = JSON.parse(jsonString);
                     renderTable();
                 } else {
-                    alert("Format de fichier non reconnu.");
+                    alert("Format de fichier non reconnu (crochets introuvables).");
                 }
             } catch (err) {
-                alert("Erreur lors de la lecture : " + err.message);
-                console.error(err);
+                alert("Erreur lors de la lecture du fichier JS : " + err.message);
+                console.error("Contenu brut posant problème :", text);
             }
         }
 
@@ -249,6 +252,8 @@
             toggleYearField();
             if(c.dead && c.year) {
                 document.getElementById('prevYear').value = c.year;
+            } else {
+                document.getElementById('prevYear').value = '';
             }
             document.getElementById('prevDetails').value = c.details || '';
             document.getElementById('prevImg').src = c.img;
@@ -303,8 +308,8 @@
             tbody.innerHTML = customCelebrities.map((c, index) => `
                 <tr class="border-b border-gray-800 hover:bg-black/30">
                     <td class="p-2"><img src="${c.img}" class="w-10 h-10 object-cover rounded"></td>
-                    <td class="p-2 font-bold">${c.name}</td>
-                    <td class="p-2 text-arcade-cyan text-xs">${c.category}</td>
+                    <td class="p-2 font-bold">${escapeHtml(c.name)}</td>
+                    <td class="p-2 text-arcade-cyan text-xs">${escapeHtml(c.category)}</td>
                     <td class="p-2">${c.dead ? `<span class="text-arcade-red">Mort (${c.year || 'N/C'})</span>` : `<span class="text-arcade-green">En vie</span>`}</td>
                     <td class="p-2 text-right space-x-2">
                         <button onclick="editCelebrity(${index})" class="text-arcade-yellow hover:underline text-xs">Modifier</button>
@@ -330,6 +335,13 @@
             a.download = 'celebs.js';
             a.click();
             URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(str) {
+            if(!str) return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
         }
     </script>
 </body>
