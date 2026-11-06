@@ -247,7 +247,7 @@
         Mort ou Pas Mort ? &copy; Arcade Edition
     </footer>
 
-    <!-- JavaScript sans Proxy, avec sécurité onerror -->
+    <!-- JavaScript avec miniatures Wikimedia conformes -->
     <script>
         const CELEBRITIES = [
             // POLITIQUE
@@ -343,7 +343,7 @@
             document.getElementById('celeb-name').innerText = currentPerson.name;
             document.getElementById('celeb-details').innerText = currentPerson.details;
             
-            // Chargement direct de l'image miniature Wikimedia sans passer par un proxy externe
+            // Assignation directe de la miniature Wikimedia valide
             document.getElementById('celeb-image').src = currentPerson.img;
             
             startTimer();
@@ -487,4 +487,3 @@
     </script>
 </body>
 </html>
-
