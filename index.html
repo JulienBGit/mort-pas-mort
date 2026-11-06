@@ -247,47 +247,47 @@
         Mort ou Pas Mort ? &copy; Arcade Edition
     </footer>
 
-    <!-- JavaScript Base Robuste, Anti-doublons & Proxy Proxy d'images -->
+    <!-- JavaScript avec URLs de miniatures Wikimedia stables -->
     <script>
         const CELEBRITIES = [
             // POLITIQUE
-            { name: "Jacques Chirac", category: "politique", dead: true, year: 2019, img: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Jacques_Chirac_in_1997.jpg", details: "Ancien Président de la République" },
-            { name: "Valéry Giscard d'Estaing", category: "politique", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/5/53/Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg", details: "Ancien Président de la République" },
-            { name: "Jean-Marie Le Pen", category: "politique", dead: true, year: 2025, img: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Jean-Marie_Le_Pen_2014.jpg", details: "Fondateur du Front National" },
-            { name: "Nicolas Sarkozy", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/d/d1/Nicolas_Sarkozy_in_2010.jpg", details: "Ancien Président de la République" },
-            { name: "François Hollande", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/0/00/Fran%C3%A7ois_Hollande_2015.jpg", details: "Ancien Président de la République" },
-            { name: "Joe Biden", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/6/68/Joe_Biden_presidential_portrait.jpg", details: "Homme politique américain" },
-            { name: "Angela Merkel", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Angela_Merkel_2019_%28cropped%29.jpg", details: "Ancienne Chancelière allemande" },
-            { name: "Silvio Berlusconi", category: "politique", dead: true, year: 2023, img: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Silvio_Berlusconi_2010.jpg", details: "Homme d'État italien" },
-            { name: "Élisabeth II", category: "politique", dead: true, year: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/1/13/Queen_Elizabeth_II_in_March_2015.jpg", details: "Reine du Royaume-Uni" },
+            { name: "Jacques Chirac", category: "politique", dead: true, year: 2019, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Jacques_Chirac_in_1997.jpg/400px-Jacques_Chirac_in_1997.jpg", details: "Ancien Président de la République" },
+            { name: "Valéry Giscard d'Estaing", category: "politique", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg/400px-Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg", details: "Ancien Président de la République" },
+            { name: "Jean-Marie Le Pen", category: "politique", dead: true, year: 2025, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Jean-Marie_Le_Pen_2014.jpg/400px-Jean-Marie_Le_Pen_2014.jpg", details: "Fondateur du Front National" },
+            { name: "Nicolas Sarkozy", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Nicolas_Sarkozy_in_2010.jpg/400px-Nicolas_Sarkozy_in_2010.jpg", details: "Ancien Président de la République" },
+            { name: "François Hollande", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fran%C3%A7ois_Hollande_2015.jpg/400px-Fran%C3%A7ois_Hollande_2015.jpg", details: "Ancien Président de la République" },
+            { name: "Joe Biden", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Joe_Biden_presidential_portrait.jpg/400px-Joe_Biden_presidential_portrait.jpg", details: "Homme politique américain" },
+            { name: "Angela Merkel", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Angela_Merkel_2019_%28cropped%29.jpg/400px-Angela_Merkel_2019_%28cropped%29.jpg", details: "Ancienne Chancelière allemande" },
+            { name: "Silvio Berlusconi", category: "politique", dead: true, year: 2023, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Silvio_Berlusconi_2010.jpg/400px-Silvio_Berlusconi_2010.jpg", details: "Homme d'État italien" },
+            { name: "Élisabeth II", category: "politique", dead: true, year: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Queen_Elizabeth_II_in_March_2015.jpg/400px-Queen_Elizabeth_II_in_March_2015.jpg", details: "Reine du Royaume-Uni" },
 
             // CHANTEURS
-            { name: "Johnny Hallyday", category: "chanteurs", dead: true, year: 2017, img: "https://upload.wikimedia.org/wikipedia/commons/3/30/Johnny_Hallyday_Cannes_2009.jpg", details: "Légende du rock français" },
-            { name: "Charles Aznavour", category: "chanteurs", dead: true, year: 2018, img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Charles_Aznavour_2014.jpg", details: "Chanteur franco-arménien" },
-            { name: "Michel Delpech", category: "chanteurs", dead: true, year: 2016, img: "https://upload.wikimedia.org/wikipedia/commons/4/45/Michel_Delpech_2010.jpg", details: "Chanteur populaire français" },
-            { name: "Christophe", category: "chanteurs", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/1/18/Christophe_F%C3%AAte_de_l%27Huma_2013_-_002.jpg", details: "Interprète des Mots Bleus" },
-            { name: "Françoise Hardy", category: "chanteurs", dead: true, year: 2024, img: "https://upload.wikimedia.org/wikipedia/commons/2/23/Fran%C3%A7oise_Hardy_1970.jpg", details: "Icône des années yé-yé" },
-            { name: "Michel Sardou", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Michel_Sardou_2011.jpg", details: "Chanteur de variété française" },
-            { name: "Line Renaud", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Line_Renaud_2013.jpg", details: "Chanteuse et actrice" },
-            { name: "Renaud", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/4/41/Renaud_Cannes_2004.jpg", details: "Auteur-compositeur-interprète" },
-            { name: "Alain Souchon", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/30/Alain_Souchon_Cabaret_Frapp%C3%A9_2015.jpg", details: "Chanteur poète français" },
+            { name: "Johnny Hallyday", category: "chanteurs", dead: true, year: 2017, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Johnny_Hallyday_Cannes_2009.jpg/400px-Johnny_Hallyday_Cannes_2009.jpg", details: "Légende du rock français" },
+            { name: "Charles Aznavour", category: "chanteurs", dead: true, year: 2018, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Charles_Aznavour_2014.jpg/400px-Charles_Aznavour_2014.jpg", details: "Chanteur franco-arménien" },
+            { name: "Michel Delpech", category: "chanteurs", dead: true, year: 2016, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Michel_Delpech_2010.jpg/400px-Michel_Delpech_2010.jpg", details: "Chanteur populaire français" },
+            { name: "Christophe", category: "chanteurs", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Christophe_F%C3%AAte_de_l%27Huma_2013_-_002.jpg/400px-Christophe_F%C3%AAte_de_l%27Huma_2013_-_002.jpg", details: "Interprète des Mots Bleus" },
+            { name: "Françoise Hardy", category: "chanteurs", dead: true, year: 2024, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Fran%C3%A7oise_Hardy_1970.jpg/400px-Fran%C3%A7oise_Hardy_1970.jpg", details: "Icône des années yé-yé" },
+            { name: "Michel Sardou", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Michel_Sardou_2011.jpg/400px-Michel_Sardou_2011.jpg", details: "Chanteur de variété française" },
+            { name: "Line Renaud", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Line_Renaud_2013.jpg/400px-Line_Renaud_2013.jpg", details: "Chanteuse et actrice" },
+            { name: "Renaud", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Renaud_Cannes_2004.jpg/400px-Renaud_Cannes_2004.jpg", details: "Auteur-compositeur-interprète" },
+            { name: "Alain Souchon", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Alain_Souchon_Cabaret_Frapp%C3%A9_2015.jpg/400px-Alain_Souchon_Cabaret_Frapp%C3%A9_2015.jpg", details: "Chanteur poète français" },
 
             // TV / MÉDIAS
-            { name: "Jean-Pierre Pernaut", category: "tv", dead: true, year: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Jean-Pierre_Pernaut_2017.jpg", details: "Présentateur du JT de 13H" },
-            { name: "Thierry Ardisson", category: "tv", dead: true, year: 2025, img: "https://upload.wikimedia.org/wikipedia/commons/5/50/Thierry_Ardisson_2013.jpg", details: "Animateur et producteur TV" },
-            { name: "Philippe Gildas", category: "tv", dead: true, year: 2018, img: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Philippe_Gildas_2011.jpg", details: "Journaliste et animateur TV" },
-            { name: "Jean-Luc Delarue", category: "tv", dead: true, year: 2012, img: "https://upload.wikimedia.org/wikipedia/commons/3/36/Michel_Drucker_2012.jpg", details: "Animateur producteur" },
-            { name: "Michel Drucker", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/3/36/Michel_Drucker_2012.jpg", details: "Monstre sacré du petit écran" },
-            { name: "Patrick Sébastien", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/1/10/Patrick_S%C3%A9bastien_2010.jpg", details: "Animateur et amuseur public" },
-            { name: "Jean-Pierre Foucault", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Jean-Pierre_Foucault_2012.jpg", details: "Présentateur de télévision" },
+            { name: "Jean-Pierre Pernaut", category: "tv", dead: true, year: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Jean-Pierre_Pernaut_2017.jpg/400px-Jean-Pierre_Pernaut_2017.jpg", details: "Présentateur du JT de 13H" },
+            { name: "Thierry Ardisson", category: "tv", dead: true, year: 2025, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Thierry_Ardisson_2013.jpg/400px-Thierry_Ardisson_2013.jpg", details: "Animateur et producteur TV" },
+            { name: "Philippe Gildas", category: "tv", dead: true, year: 2018, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Philippe_Gildas_2011.jpg/400px-Philippe_Gildas_2011.jpg", details: "Journaliste et animateur TV" },
+            { name: "Jean-Luc Delarue", category: "tv", dead: true, year: 2012, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Michel_Drucker_2012.jpg/400px-Michel_Drucker_2012.jpg", details: "Animateur producteur" },
+            { name: "Michel Drucker", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Michel_Drucker_2012.jpg/400px-Michel_Drucker_2012.jpg", details: "Monstre sacré du petit écran" },
+            { name: "Patrick Sébastien", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Patrick_S%C3%A9bastien_2010.jpg/400px-Patrick_S%C3%A9bastien_2010.jpg", details: "Animateur et amuseur public" },
+            { name: "Jean-Pierre Foucault", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Jean-Pierre_Foucault_2012.jpg/400px-Jean-Pierre_Foucault_2012.jpg", details: "Présentateur de télévision" },
 
             // ACTEURS
-            { name: "Jean-Paul Belmondo", category: "acteur", dead: true, year: 2021, img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Jean-Paul_Belmondo_Cannes_2011.jpg", details: "Le Magnifique du cinéma français" },
-            { name: "Alain Delon", category: "acteur", dead: true, year: 2024, img: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Alain_Delon_Cannes_2013.jpg", details: "Légende du cinéma français" },
-            { name: "Claude Brasseur", category: "acteur", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Claude_Brasseur_Cabourg_2016.jpg", details: "Acteur français de talent" },
-            { name: "Brigitte Bardot", category: "acteur", dead: true, year: 2026, img: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Brigitte_Bardot_1967.jpg", details: "Icône du cinéma international" },
-            { name: "Pierre Richard", category: "acteur", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Pierre_Richard_Cabaret_Frapp%C3%A9_2015.jpg", details: "Le Grand Blond" },
-            { name: "Gérard Depardieu", category: "acteur", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/c/ca/G%C3%A9rard_Depardieu_2015.jpg", details: "Acteur de cinéma" }
+            { name: "Jean-Paul Belmondo", category: "acteur", dead: true, year: 2021, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Jean-Paul_Belmondo_Cannes_2011.jpg/400px-Jean-Paul_Belmondo_Cannes_2011.jpg", details: "Le Magnifique du cinéma français" },
+            { name: "Alain Delon", category: "acteur", dead: true, year: 2024, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Alain_Delon_Cannes_2013.jpg/400px-Alain_Delon_Cannes_2013.jpg", details: "Légende du cinéma français" },
+            { name: "Claude Brasseur", category: "acteur", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Claude_Brasseur_Cabourg_2016.jpg/400px-Claude_Brasseur_Cabourg_2016.jpg", details: "Acteur français de talent" },
+            { name: "Brigitte Bardot", category: "acteur", dead: true, year: 2026, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Brigitte_Bardot_1967.jpg/400px-Brigitte_Bardot_1967.jpg", details: "Icône du cinéma international" },
+            { name: "Pierre Richard", category: "acteur", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Pierre_Richard_Cabaret_Frapp%C3%A9_2015.jpg/400px-Pierre_Richard_Cabaret_Frapp%C3%A9_2015.jpg", details: "Le Grand Blond" },
+            { name: "Gérard Depardieu", category: "acteur", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/G%C3%A9rard_Depardieu_2015.jpg/400px-G%C3%A9rard_Depardieu_2015.jpg", details: "Acteur de cinéma" }
         ];
 
         let currentCategory = 'all';
@@ -301,190 +301,4 @@
         let timerInterval = null;
         const maxTimer = 10;
 
-        function showScreen(screenName) {
-            document.getElementById('screen-start').classList.add('hidden');
-            document.getElementById('screen-game').classList.add('hidden');
-            document.getElementById('screen-gameover').classList.add('hidden');
-
-            document.getElementById(`screen-${screenName}`).classList.remove('hidden');
-            document.getElementById(`screen-${screenName}`).classList.add('flex');
-        }
-
-        function startGame(category) {
-            currentCategory = category;
-            score = 0;
-            streak = 0;
-            
-            document.getElementById('game-score').innerText = score;
-            document.getElementById('game-best').innerText = bestScore;
-
-            let items = category === 'random' 
-                ? [...CELEBRITIES] 
-                : CELEBRITIES.filter(c => c.category === category);
-            
-            queue = items.sort(() => Math.random() - 0.5);
-
-            showScreen('game');
-            loadNextPerson();
-        }
-
-        function loadNextPerson() {
-            clearInterval(timerInterval);
-            
-            if (queue.length === 0) {
-                let items = currentCategory === 'random' 
-                    ? [...CELEBRITIES] 
-                    : CELEBRITIES.filter(c => c.category === currentCategory);
-                queue = items.sort(() => Math.random() - 0.5);
-            }
-
-            currentPerson = queue.pop();
-
-            document.getElementById('celeb-name').innerText = currentPerson.name;
-            document.getElementById('celeb-details').innerText = currentPerson.details;
-            
-            // Passage sécurisé par le proxy d'image pour garantir l'affichage sur mobile et PC
-            const rawUrl = currentPerson.img.replace(/^https?:\/\//, '');
-            document.getElementById('celeb-image').src = `https://images.weserv.nl/?url=${encodeURIComponent(rawUrl)}`;
-            
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            timerVal = 10;
-            updateTimerUI();
-
-            const startTime = Date.now();
-            timerInterval = setInterval(() => {
-                const elapsed = (Date.now() - startTime) / 1000;
-                timerVal = Math.max(0, maxTimer - elapsed);
-                updateTimerUI();
-
-                if (timerVal <= 0) {
-                    clearInterval(timerInterval);
-                    gameOver("Temps écoulé ! Trop lent !");
-                }
-            }, 100);
-        }
-
-        function updateTimerUI() {
-            const timerText = document.getElementById('timer-text');
-            const timerCircle = document.getElementById('timer-circle');
-            
-            timerText.innerText = Math.ceil(timerVal);
-
-            const circumference = 2 * Math.PI * 20;
-            const offset = circumference - (timerVal / maxTimer) * circumference;
-            timerCircle.style.strokeDashoffset = offset;
-
-            if (timerVal < 3) {
-                timerCircle.setAttribute('class', 'text-arcade-red transition-all duration-100 ease-linear');
-            } else if (timerVal < 6) {
-                timerCircle.setAttribute('class', 'text-arcade-yellow transition-all duration-100 ease-linear');
-            } else {
-                timerCircle.setAttribute('class', 'text-arcade-green transition-all duration-100 ease-linear');
-            }
-        }
-
-        function submitAnswer(guessedDead) {
-            clearInterval(timerInterval);
-
-            const isCorrect = (guessedDead === currentPerson.dead);
-
-            if (isCorrect) {
-                const speedBonus = Math.round(timerVal * 100);
-                const pointsGained = 1000 + speedBonus;
-                score += pointsGained;
-                streak++;
-
-                document.getElementById('game-score').innerText = score;
-                if (score > bestScore) {
-                    bestScore = score;
-                    localStorage.setItem('mort_best_score', bestScore.toString());
-                    document.getElementById('game-best').innerText = bestScore;
-                }
-
-                loadNextPerson();
-            } else {
-                let statusText = currentPerson.dead ? `est MORT(E) (${currentPerson.year})` : "est EN VIE !";
-                gameOver(`Faux ! ${currentPerson.name} ${statusText}`);
-            }
-        }
-
-        function gameOver(reason) {
-            clearInterval(timerInterval);
-            
-            document.getElementById('gameover-reason').innerText = reason;
-            document.getElementById('final-score').innerText = score;
-            document.getElementById('final-streak').innerText = streak;
-
-            const inputContainer = document.getElementById('arcade-input-container');
-            if (score > 0) {
-                inputContainer.classList.remove('hidden');
-            } else {
-                inputContainer.classList.add('hidden');
-            }
-
-            renderLeaderboard();
-            showScreen('gameover');
-        }
-
-        function getHighScores() {
-            const raw = localStorage.getItem('mort_leaderboard');
-            if (!raw) {
-                return [
-                    { pseudo: "CHAMP", score: 15000 },
-                    { pseudo: "RETRO", score: 8500 },
-                    { pseudo: "PIXEL", score: 4000 }
-                ];
-            }
-            try {
-                return JSON.parse(raw);
-            } catch (e) {
-                return [];
-            }
-        }
-
-        function saveHighScore() {
-            const input = document.getElementById('player-pseudo');
-            let pseudo = (input.value || 'ANON').trim().toUpperCase().substring(0, 5);
-            if (!pseudo) pseudo = 'ANON';
-
-            let scores = getHighScores();
-            scores.push({ pseudo, score });
-            scores.sort((a, b) => b.score - a.score);
-            scores = scores.slice(0, 5);
-
-            localStorage.setItem('mort_leaderboard', JSON.stringify(scores));
-            document.getElementById('arcade-input-container').classList.add('hidden');
-            renderLeaderboard();
-        }
-
-        function renderLeaderboard() {
-            const listEl = document.getElementById('leaderboard-list');
-            const scores = getHighScores();
-
-            listEl.innerHTML = scores.map((item, index) => `
-                <li class="flex justify-between items-center bg-black/50 p-2 rounded border border-gray-800">
-                    <span class="flex items-center gap-3">
-                        <span class="${index === 0 ? 'text-arcade-yellow' : 'text-gray-500'}">#${index + 1}</span>
-                        <span class="text-arcade-cyan font-bold">${escapeHtml(item.pseudo)}</span>
-                    </span>
-                    <span class="text-white">${item.score} PTS</span>
-                </li>
-            `).join('');
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/[&<>"']/g, function(m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('game-best').innerText = bestScore;
-        });
-    </script>
-</body>
-</html>
+        function
