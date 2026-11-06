@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mort ou Pas Mort ? - Back-Office Admin</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        arcade: ['"Press Start 2P"', 'cursive'],
+                        sans: ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        arcade: {
+                            purple: '#1a0b2e',
+                            dark: '#0f051d',
+                            pink: '#ff007f',
+                            cyan: '#00f3ff',
+                            yellow: '#ffe600',
+                            red: '#ff2a6d',
+                            green: '#05ffa1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-arcade-dark text-white font-sans min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <h1 class="font-arcade text-2xl sm:text-4xl text-arcade-cyan tracking-wider">ADMIN BACK-OFFICE</h1>
+            <p class="text-gray-400 text-sm">Gérez et enrichissez la base de données de vos célébrités en direct de Wikipédia</p>
+        </div>
+
+        <!-- Formulaire de recherche et ajout -->
+        <div class="bg-arcade-purple/80 border-2 border-arcade-cyan p-6 rounded-2xl shadow-lg space-y-4">
+            <h2 class="font-arcade text-arcade-yellow text-sm">1. RECHERCHER SUR WIKIPÉDIA</h2>
+            
+            <div class="flex gap-2">
+                <input type="text" id="wikiSearchInput" placeholder="Ex: Marion_Cotillard ou Emmanuel_Macron" class="w-full bg-black border-2 border-arcade-cyan text-white p-3 rounded-xl font-sans focus:outline-none focus:ring-2 focus:ring-arcade-yellow">
+                <button onclick="fetchWikiData()" class="px-6 py-3 bg-arcade-cyan text-black font-bold font-arcade text-xs rounded-xl hover:bg-white transition-colors">
+                    CHERCHER
+                </button>
+            </div>
+
+            <div id="previewContainer" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-gray-700 items-center">
+                <div class="flex justify-center">
+                    <img id="prevImg" src="" alt="Aperçu" class="w-32 h-32 object-cover rounded-xl border-2 border-arcade-pink">
+                </div>
+                <div class="sm:col-span-2 space-y-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 font-arcade">NOM COMPLET</label>
+                        <input type="text" id="prevName" class="w-full bg-black border border-gray-700 p-2 rounded text-white font-bold">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs text-gray-400 font-arcade">CATÉGORIE</label>
+                            <select id="prevCategory" class="w-full bg-black border border-gray-700 p-2 rounded text-white">
+                                <option value="politique">Politique</option>
+                                <option value="chanteurs">Chanteurs</option>
+                                <option value="tv">TV / Médias</option>
+                                <option value="acteur">Acteurs</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 font-arcade">STATUT</label>
+                            <select id="prevDead" class="w-full bg-black border border-gray-700 p-2 rounded text-white" onchange="toggleYearField()">
+                                <option value="false">En vie (False)</option>
+                                <option value="true">Mort (True)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="yearContainer" class="hidden">
+                        <label class="block text-xs text-gray-400 font-arcade">ANNÉE DE DÉCÈS</label>
+                        <input type="number" id="prevYear" placeholder="2023" class="w-full bg-black border border-gray-700 p-2 rounded text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 font-arcade">DÉTAILS / DESCRIPTION COURTE</label>
+                        <input type="text" id="prevDetails" class="w-full bg-black border border-gray-700 p-2 rounded text-white" placeholder="Ex: Actrice française oscarisée">
+                    </div>
+                    <!-- On garde l'URL exacte renvoyée par Wikipédia -->
+                    <input type="hidden" id="prevImgUrl">
+
+                    <button onclick="addCelebrity()" class="w-full py-3 bg-arcade-green text-black font-bold font-arcade text-xs rounded-xl hover:bg-white transition-colors">
+                        + AJOUTER À LA LISTE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste temporaire des ajouts / Export -->
+        <div class="bg-gray-900 border-2 border-arcade-pink p-6 rounded-2xl shadow-lg space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="font-arcade text-arcade-pink text-sm">2. LISTE EN COURS (GÉNÉRATION DU FICHIER)</h2>
+                <button onclick="exportJsFile()" class="px-4 py-2 bg-arcade-yellow text-black font-arcade text-xs font-bold rounded-xl hover:bg-white transition-colors">
+                    💾 TÉLÉCHARGER CELEBS.JS
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-800 text-arcade-cyan font-arcade text-xs">
+                            <th class="p-2">Image</th>
+                            <th class="p-2">Nom</th>
+                            <th class="p-2">Catégorie</th>
+                            <th class="p-2">Statut</th>
+                            <th class="p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Rempli dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tableau temporaire initialisé vide (ou vous pourrez charger votre liste existante)
+        let customCelebrities = [];
+
+        async function fetchWikiData() {
+            let query = document.getElementById('wikiSearchInput').value.trim();
+            if(!query) return alert("Entrez un nom de page Wikipédia !");
+
+            // Remplacement des espaces par des underscores pour l'API
+            query = query.replace(/ /g, '_');
+
+            const url = `https://fr.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages|extracts&exintro&explaintext&pithumbsize=500&format=json&origin=*`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                const pages = data.query.pages;
+                const pageId = Object.keys(pages)[0];
+
+                if(pageId === "-1") {
+                    alert("Page Wikipédia introuvable ! Vérifiez l'orthographe.");
+                    return;
+                }
+
+                const pageData = pages[pageId];
+                const title = pageData.title.replace(/_/g, '');
+                const imgUrl = pageData.thumbnail ? pageData.thumbnail.source : 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
+                const extract = pageData.extract || "";
+
+                // Pré-remplissage du formulaire d'aperçu
+                document.getElementById('prevName').value = pageData.title.replace(/_/g, ' ');
+                document.getElementById('prevImg').src = imgUrl;
+                document.getElementById('prevImgUrl').value = imgUrl;
+                document.getElementById('prevDetails').value = extract.substring(0, 60) + "...";
+                
+                document.getElementById('previewContainer').classList.remove('hidden');
+
+            } catch (e) {
+                alert("Erreur lors de la récupération de l'API Wikipedia.");
+                console.error(e);
+            }
+        }
+
+        function toggleYearField() {
+            const isDead = document.getElementById('prevDead').value === 'true';
+            const yearContainer = document.getElementById('yearContainer');
+            if(isDead) {
+                yearContainer.classList.remove('hidden');
+            } else {
+                yearContainer.classList.add('hidden');
+            }
+        }
+
+        function addCelebrity() {
+            const name = document.getElementById('prevName').value;
+            const category = document.getElementById('prevCategory').value;
+            const dead = document.getElementById('prevDead').value === 'true';
+            const year = dead ? parseInt(document.getElementById('prevYear').value) || 0 : undefined;
+            const details = document.getElementById('prevDetails').value;
+            const img = document.getElementById('prevImgUrl').value;
+
+            const newCeleb = { name, category, dead, img, details };
+            if(dead && year) newCeleb.year = year;
+
+            customCelebrities.push(newCeleb);
+            renderTable();
+
+            // Reset
+            document.getElementById('previewContainer').classList.add('hidden');
+            document.getElementById('wikiSearchInput').value = '';
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('adminTableBody');
+            if(customCelebrities.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">Aucune célébrité ajoutée pour l'instant.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = customCelebrities.map((c, index) => `
+                <tr class="border-b border-gray-800 hover:bg-black/30">
+                    <td class="p-2"><img src="${c.img}" class="w-10 h-10 object-cover rounded"></td>
+                    <td class="p-2 font-bold">${c.name}</td>
+                    <td class="p-2 text-arcade-cyan text-xs">${c.category}</td>
+                    <td class="p-2">${c.dead ? `<span class="text-arcade-red">Mort (${c.year || 'N/C'})</span>` : `<span class="text-arcade-green">En vie</span>`}</td>
+                    <td class="p-2"><button onclick="removeItem(${index})" class="text-red-500 hover:text-white text-xs">Supprimer</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function removeItem(index) {
+            customCelebrities.splice(index, 1);
+            renderTable();
+        }
+
+        function exportJsFile() {
+            const fileContent = "const CELEBRITIES = " + JSON.stringify(customCelebrities, null, 4) + ";";
+            const blob = new Blob([fileContent], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'celebs.js';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Init au chargement
+        renderTable();
+    </script>
+</body>
+</html>
