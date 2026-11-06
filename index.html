@@ -172,7 +172,7 @@
 
             <div class="w-full bg-gray-900 border-2 border-arcade-purple rounded-2xl p-4 sm:p-6 flex flex-col items-center space-y-4 shadow-2xl relative overflow-hidden">
                 <div class="relative w-48 h-48 sm:w-60 sm:h-60 rounded-xl overflow-hidden border-2 border-arcade-cyan shadow-neon-cyan bg-gray-800 flex items-center justify-center">
-                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover">
+                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';">
                 </div>
 
                 <div class="text-center space-y-1">
@@ -247,7 +247,7 @@
         Mort ou Pas Mort ? &copy; Arcade Edition
     </footer>
 
-    <!-- JavaScript avec URLs de miniatures Wikimedia stables -->
+    <!-- JavaScript sans Proxy, avec sécurité onerror -->
     <script>
         const CELEBRITIES = [
             // POLITIQUE
@@ -343,7 +343,7 @@
             document.getElementById('celeb-name').innerText = currentPerson.name;
             document.getElementById('celeb-details').innerText = currentPerson.details;
             
-            // Affichage direct de l'URL miniature Wikimedia stable
+            // Chargement direct de l'image miniature Wikimedia sans passer par un proxy externe
             document.getElementById('celeb-image').src = currentPerson.img;
             
             startTimer();
