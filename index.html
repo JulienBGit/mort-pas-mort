@@ -42,6 +42,7 @@
         }
     </script>
     <style>
+        /* Custom Scanlines & Retro FX */
         .scanlines {
             background: linear-gradient(
                 rgba(18, 16, 16, 0) 50%, 
@@ -66,6 +67,7 @@
             text-shadow: 0 0 8px #ffe600, 0 0 20px #ffe600;
         }
 
+        /* Pulse Animation */
         @keyframes pulseGlow {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.85; transform: scale(0.98); }
@@ -74,6 +76,7 @@
             animation: pulseGlow 2s infinite ease-in-out;
         }
 
+        /* Shake FX for Game Over */
         .shake {
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -87,13 +90,18 @@
 </head>
 <body class="bg-arcade-dark text-white font-sans min-h-screen flex flex-col justify-between overflow-x-hidden select-none relative">
     
+    <!-- Retro CRT overlay effect -->
     <div class="fixed inset-0 scanlines z-50"></div>
+
+    <!-- Background decorative grid -->
     <div class="fixed inset-0 bg-[radial-gradient(#ff007f_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none"></div>
 
+    <!-- Main Container -->
     <main class="container mx-auto px-4 py-6 max-w-4xl flex-grow flex flex-col justify-center items-center z-10">
 
         <!-- ================= SCREEN 1: CATEGORY SELECTION ================= -->
         <section id="screen-start" class="w-full flex flex-col items-center text-center space-y-8 py-4">
+            <!-- Game Title -->
             <div class="space-y-3">
                 <h1 class="font-arcade text-3xl sm:text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-arcade-pink via-arcade-yellow to-arcade-cyan text-glow-pink tracking-wider">
                     MORT OU PAS MORT ?
@@ -103,6 +111,7 @@
                 </p>
             </div>
 
+            <!-- Rules Banner -->
             <div class="bg-arcade-purple/80 border-2 border-arcade-cyan/50 p-4 sm:p-6 rounded-xl max-w-lg shadow-neon-cyan backdrop-blur">
                 <h2 class="font-arcade text-arcade-yellow text-xs sm:text-sm mb-3">RÈGLES DU JEU</h2>
                 <ul class="text-left text-sm sm:text-base text-gray-200 space-y-2">
@@ -121,6 +130,7 @@
                 </ul>
             </div>
 
+            <!-- Categories Selection -->
             <div class="w-full max-w-md space-y-4">
                 <h3 class="font-arcade text-gray-300 text-xs sm:text-sm tracking-wide">CHOISIS TA CATÉGORIE</h3>
                 
@@ -128,18 +138,18 @@
                     <button onclick="startGame('politique')" class="group relative p-4 bg-gray-900 border-2 border-arcade-pink rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-pink hover:text-black transition-all duration-200 shadow-neon-pink">
                         🏛️ POLITIQUE
                     </button>
-                    <button onclick="startGame('chanteurs')" class="group relative p-4 bg-gray-900 border-2 border-arcade-cyan rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-cyan hover:text-black transition-all duration-200 shadow-neon-cyan">
-                        🎤 CHANTEURS
+                    <button onclick="startGame('musique')" class="group relative p-4 bg-gray-900 border-2 border-arcade-cyan rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-cyan hover:text-black transition-all duration-200 shadow-neon-cyan">
+                        🎤 MUSIQUE
                     </button>
                     <button onclick="startGame('tv')" class="group relative p-4 bg-gray-900 border-2 border-arcade-yellow rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-yellow hover:text-black transition-all duration-200 shadow-neon-yellow">
                         📺 TV / MÉDIAS
                     </button>
-                    <button onclick="startGame('acteur')" class="group relative p-4 bg-gray-900 border-2 border-arcade-green rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-green hover:text-black transition-all duration-200 shadow-neon-green">
-                        🎬 ACTEURS
+                    <button onclick="startGame('cinema')" class="group relative p-4 bg-gray-900 border-2 border-arcade-green rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-green hover:text-black transition-all duration-200 shadow-neon-green">
+                        🎬 CINÉMA
                     </button>
                 </div>
 
-                <button onclick="startGame('random')" class="w-full p-4 bg-gradient-to-r from-arcade-pink via-arcade-yellow to-arcade-cyan text-black font-arcade text-xs sm:text-sm rounded-xl hover:opacity-90 transition-opacity font-extrabold uppercase shadow-lg">
+                <button onclick="startGame('all')" class="w-full p-4 bg-gradient-to-r from-arcade-pink via-arcade-yellow to-arcade-cyan text-black font-arcade text-xs sm:text-sm rounded-xl hover:opacity-90 transition-opacity font-extrabold uppercase shadow-lg">
                     🎲 TOUT MÉLANGER
                 </button>
             </div>
@@ -148,12 +158,15 @@
         <!-- ================= SCREEN 2: GAMEPLAY ================= -->
         <section id="screen-game" class="w-full max-w-xl flex-col items-center space-y-4 hidden">
             
+            <!-- Header Info Bar -->
             <div class="w-full flex justify-between items-center bg-gray-900/90 border border-arcade-purple p-3 rounded-xl shadow-md">
+                <!-- Current Score -->
                 <div class="flex flex-col">
                     <span class="text-xs text-gray-400 font-arcade">SCORE</span>
                     <span id="game-score" class="font-arcade text-lg sm:text-xl text-arcade-cyan text-glow-cyan">0</span>
                 </div>
 
+                <!-- Timer Center -->
                 <div class="flex flex-col items-center">
                     <div class="relative w-12 h-12 flex items-center justify-center">
                         <svg class="w-full h-full transform -rotate-90">
@@ -164,27 +177,40 @@
                     </div>
                 </div>
 
+                <!-- High Score -->
                 <div class="flex flex-col items-end">
                     <span class="text-xs text-gray-400 font-arcade">BEST</span>
                     <span id="game-best" class="font-arcade text-lg sm:text-xl text-arcade-yellow text-glow-yellow">0</span>
                 </div>
             </div>
 
+            <!-- Celebrity Card -->
             <div class="w-full bg-gray-900 border-2 border-arcade-purple rounded-2xl p-4 sm:p-6 flex flex-col items-center space-y-4 shadow-2xl relative overflow-hidden">
+                <!-- Image Container with Fallback -->
                 <div class="relative w-48 h-48 sm:w-60 sm:h-60 rounded-xl overflow-hidden border-2 border-arcade-cyan shadow-neon-cyan bg-gray-800 flex items-center justify-center">
-                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover">
+                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover" onerror="handleImageError(this)">
+                    
+                    <!-- Fallback SVG Placeholder (hidden by default) -->
+                    <div id="image-fallback" class="hidden flex-col items-center justify-center text-gray-500">
+                        <svg class="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span class="text-xs font-arcade text-gray-400">PHOTO NON DISPO</span>
+                    </div>
                 </div>
 
+                <!-- Celebrity Info -->
                 <div class="text-center space-y-1">
                     <h2 id="celeb-name" class="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase">
-                        Chargement...
+                        ...
                     </h2>
                     <p id="celeb-details" class="text-sm sm:text-base text-arcade-cyan font-semibold">
-                        Interrogation de Wikipédia...
+                        ...
                     </p>
                 </div>
             </div>
 
+            <!-- Action Buttons -->
             <div class="w-full grid grid-cols-2 gap-4 pt-2">
                 <button onclick="submitAnswer(true)" class="py-4 sm:py-5 px-4 bg-gradient-to-b from-red-600 to-red-800 border-2 border-arcade-red rounded-xl text-white font-black text-lg sm:text-xl tracking-wider hover:brightness-125 active:scale-95 transition-all shadow-neon-red flex items-center justify-center gap-2">
                     <span class="text-2xl sm:text-3xl">💀</span> MORT
@@ -206,20 +232,22 @@
                 </p>
             </div>
 
+            <!-- Summary Box -->
             <div class="w-full bg-arcade-purple/90 border-2 border-arcade-pink p-6 rounded-2xl shadow-neon-pink space-y-4">
                 <div class="flex justify-between items-center border-b border-gray-700 pb-3">
                     <span class="text-gray-300 font-arcade text-xs">SCORE FINAL</span>
                     <span id="final-score" class="font-arcade text-2xl text-arcade-yellow text-glow-yellow">0</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-gray-300 font-arcade text-xs">SÉRIE</span>
+                    <span class="text-gray-300 font-arcade text-xs">BONNES RÉPONSES</span>
                     <span id="final-streak" class="font-arcade text-xl text-arcade-cyan">0</span>
                 </div>
 
+                <!-- Input Arcade Pseudo -->
                 <div id="arcade-input-container" class="pt-4 border-t border-gray-700 space-y-3">
-                    <label for="player-pseudo" class="block text-xs font-arcade text-gray-300">ENTREZ VOS 5 INITIALES</label>
+                    <label for="player-pseudo" class="block text-xs font-arcade text-gray-300">ENTREZ VOTRE PSEUDO (5 CAR.)</label>
                     <div class="flex gap-2">
-                        <input type="text" id="player-pseudo" maxlength="5" placeholder="ARC" class="w-full bg-black border-2 border-arcade-cyan text-arcade-yellow font-arcade text-center text-lg p-2 rounded focus:outline-none focus:ring-2 focus:ring-arcade-yellow uppercase tracking-widest" value="ARCAD">
+                        <input type="text" id="player-pseudo" maxlength="5" placeholder="PLAYER" class="w-full bg-black border-2 border-arcade-cyan text-arcade-yellow font-arcade text-center text-lg p-2 rounded focus:outline-none focus:ring-2 focus:ring-arcade-yellow uppercase tracking-widest">
                         <button onclick="saveHighScore()" class="px-4 bg-arcade-cyan text-black font-arcade text-xs font-bold rounded hover:bg-white transition-colors">
                             OK
                         </button>
@@ -227,6 +255,7 @@
                 </div>
             </div>
 
+            <!-- High Scores Leaderboard -->
             <div class="w-full bg-gray-900 border border-arcade-purple p-4 rounded-xl space-y-3">
                 <h3 class="font-arcade text-arcade-yellow text-xs tracking-wider flex items-center justify-center gap-2">
                     🏆 HALL OF FAME 🏆
@@ -236,6 +265,7 @@
                 </ol>
             </div>
 
+            <!-- Restart Button -->
             <button onclick="showScreen('start')" class="w-full p-4 bg-arcade-pink text-white font-arcade text-xs rounded-xl hover:bg-white hover:text-black transition-colors shadow-neon-pink font-bold">
                 🔄 REJOUER UNE PARTIE
             </button>
@@ -243,40 +273,60 @@
 
     </main>
 
+    <!-- Footer -->
     <footer class="w-full text-center py-4 text-xs text-gray-500 font-mono z-10">
-        Mort ou Pas Mort ? &copy; Arcade Edition • Données dynamiques via Wikipédia API
+        Mort ou Pas Mort ? &copy; Arcade Edition • Données via Wikimedia Commons
     </footer>
 
-    <!-- JavaScript Dynamique (Wikipédia API + Proxy d'images) -->
+    <!-- JavaScript Logic -->
     <script>
-        // Listes de célébrités par nom exact d'article Wikipédia français
-        const database = {
-            politique: [
-                "Valéry Giscard d'Estaing", "Jacques Chirac", "Jean-Marie Le Pen", "Joe Biden", 
-                "Angela Merkel", "Kofi Annan", "François Hollande", "Nicolas Sarkozy", 
-                "Dominique Strauss-Kahn", "Laurent Fabius", "Édouard Balladur", "Alain Juppé",
-                "Silvio Berlusconi", "Élisabeth II", "Mikhail Gorbachev"
-            ],
-            chanteurs: [
-                "Johnny Hallyday", "Michel Delpech", "Line Renaud", "Michel Sardou", 
-                "Alain Souchon", "Christophe (chanteur)", "Eddy Mitchell", "Serge Gainsbourg",
-                "Charles Aznavour", "Françoise Hardy", "Patrick Juvet", "Renaud", "Tina Turner"
-            ],
-            tv: [
-                "Jean-Pierre Pernaut", "Michel Drucker", "Patrick Sébastien", "Philippe Gildas", 
-                "Thierry Ardisson", "Jean-Luc Delarue", "William Leymergie", "Denise Fabre",
-                "Évelyne Dhéliat", "Philippe Risoli", "Patrick Sabatier", "Igor Bogdanoff"
-            ],
-            acteur: [
-                "Jean-Paul Belmondo", "Alain Delon", "Pierre Richard", "Brigitte Bardot", 
-                "Claude Brasseur", "Jean Rochefort", "Michel Piccoli", "Gérard Depardieu",
-                "Anouk Aimée", "Catherine Deneuve", "Jean-Pierre Marielle", "Marion Cotillard"
-            ]
-        };
+        /* ================= DATABASE ================= */
+        const CELEBRITIES = [
+            // POLITIQUE
+            { id: 1, name: "Jacques Chirac", category: "politique", dead: true, year: 2019, birth: 1932, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Jacques_Chirac_in_1997.jpg/400px-Jacques_Chirac_in_1997.jpg", details: "Ancien Président de la République" },
+            { id: 2, name: "Valéry Giscard d'Estaing", category: "politique", dead: true, year: 2020, birth: 1926, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg/400px-Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg", details: "Ancien Président de la République" },
+            { id: 3, name: "Nicolas Sarkozy", category: "politique", dead: false, birth: 1955, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Nicolas_Sarkozy_in_2010.jpg/400px-Nicolas_Sarkozy_in_2010.jpg", details: "Ancien Président de la République" },
+            { id: 4, name: "Jean-Marie Le Pen", category: "politique", dead: false, birth: 1928, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Jean-Marie_Le_Pen_2014.jpg/400px-Jean-Marie_Le_Pen_2014.jpg", details: "Homme politique français" },
+            { id: 5, name: "Élisabeth II", category: "politique", dead: true, year: 2022, birth: 1926, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Queen_Elizabeth_II_in_March_2015.jpg/400px-Queen_Elizabeth_II_in_March_2015.jpg", details: "Reine du Royaume-Uni" },
+            { id: 6, name: "Joe Biden", category: "politique", dead: false, birth: 1942, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Joe_Biden_presidential_portrait.jpg/400px-Joe_Biden_presidential_portrait.jpg", details: "Président des États-Unis" },
+            { id: 7, name: "Silvio Berlusconi", category: "politique", dead: true, year: 2023, birth: 1936, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Silvio_Berlusconi_2010.jpg/400px-Silvio_Berlusconi_2010.jpg", details: "Homme d'État italien" },
+            { id: 8, name: "François Hollande", category: "politique", dead: false, birth: 1954, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fran%C3%A7ois_Hollande_2015.jpg/400px-Fran%C3%A7ois_Hollande_2015.jpg", details: "Ancien Président de la République" },
+            { id: 9, name: "Mikhail Gorbachev", category: "politique", dead: true, year: 2022, birth: 1931, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mikhail_Gorbachev_1997.jpg/400px-Mikhail_Gorbachev_1997.jpg", details: "Dernier dirigeant de l'URSS" },
 
+            // MUSIQUE
+            { id: 10, name: "Johnny Hallyday", category: "musique", dead: true, year: 2017, birth: 1943, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Johnny_Hallyday_Cannes_2009.jpg/400px-Johnny_Hallyday_Cannes_2009.jpg", details: "Chanteur rock français" },
+            { id: 11, name: "Charles Aznavour", category: "musique", dead: true, year: 2018, birth: 1924, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Charles_Aznavour_2014.jpg/400px-Charles_Aznavour_2014.jpg", details: "Chanteur franco-arménien" },
+            { id: 12, name: "Michel Sardou", category: "musique", dead: false, birth: 1947, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Michel_Sardou_2014.jpg/400px-Michel_Sardou_2014.jpg", details: "Chanteur populaire français" },
+            { id: 13, name: "Renaud", category: "musique", dead: false, birth: 1952, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Renaud_Cannes_2004.jpg/400px-Renaud_Cannes_2004.jpg", details: "Auteur-compositeur-interprète" },
+            { id: 14, name: "Tina Turner", category: "musique", dead: true, year: 2023, birth: 1939, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Tina_Turner_1985.jpg/400px-Tina_Turner_1985.jpg", details: "Légende du Rock & Soul" },
+            { id: 15, name: "Christophe", category: "musique", dead: true, year: 2020, birth: 1945, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Christophe_2012.jpg/400px-Christophe_2012.jpg", details: "Interprète des Mots Bleus" },
+            { id: 16, name: "Francis Cabrel", category: "musique", dead: false, birth: 1953, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Francis_Cabrel_2011.jpg/400px-Francis_Cabrel_2011.jpg", details: "Chanteur & Musicien" },
+            { id: 17, name: "Françoise Hardy", category: "musique", dead: true, year: 2024, birth: 1944, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Fran%C3%A7oise_Hardy_1970.jpg/400px-Fran%C3%A7oise_Hardy_1970.jpg", details: "Icône de la chanson française" },
+            { id: 18, name: "Eddy Mitchell", category: "musique", dead: false, birth: 1942, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Eddy_Mitchell_2010.jpg/400px-Eddy_Mitchell_2010.jpg", details: "Chanteur et Comédien" },
+
+            // TV / MEDIA
+            { id: 19, name: "Jean-Pierre Pernaut", category: "tv", dead: true, year: 2022, birth: 1950, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Jean-Pierre_Pernaut_2011.jpg/400px-Jean-Pierre_Pernaut_2011.jpg", details: "Présentateur vedette du 13H" },
+            { id: 20, name: "Igor Bogdanoff", category: "tv", dead: true, year: 2022, birth: 1949, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Igor_Bogdanoff_2012.jpg/400px-Igor_Bogdanoff_2012.jpg", details: "Animateur producteur Temps X" },
+            { id: 21, name: "Michel Drucker", category: "tv", dead: false, birth: 1942, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Michel_Drucker_2014.jpg/400px-Michel_Drucker_2014.jpg", details: "Présentateur incontournable" },
+            { id: 22, name: "Thierry Ardisson", category: "tv", dead: false, birth: 1949, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Thierry_Ardisson_2017.jpg/400px-Thierry_Ardisson_2017.jpg", details: "Animateur et producteur TV" },
+            { id: 23, name: "Jean-Pierre Foucault", category: "tv", dead: false, birth: 1947, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Jean-Pierre_Foucault_2012.jpg/400px-Jean-Pierre_Foucault_2012.jpg", details: "Animateur de télévision" },
+            { id: 24, name: "Philippe Gildas", category: "tv", dead: true, year: 2018, birth: 1935, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Philippe_Gildas_2012.jpg/400px-Philippe_Gildas_2012.jpg", details: "Journaliste et animateur Nulle Part Ailleurs" },
+            { id: 25, name: "Patrick Poivre d'Arvor", category: "tv", dead: false, birth: 1947, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Patrick_Poivre_d%27Arvor_2013.jpg/400px-Patrick_Poivre_d%27Arvor_2013.jpg", details: "Ancien présentateur du 20H" },
+
+            // CINEMA
+            { id: 26, name: "Jean-Paul Belmondo", category: "cinema", dead: true, year: 2021, birth: 1933, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Jean-Paul_Belmondo_1960.jpg/400px-Jean-Paul_Belmondo_1960.jpg", details: "Monstre sacré du Cinéma" },
+            { id: 27, name: "Alain Delon", category: "cinema", dead: true, year: 2024, birth: 1935, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Alain_Delon_Cannes_2019.jpg/400px-Alain_Delon_Cannes_2019.jpg", details: "Acteur et icône du Cinéma" },
+            { id: 28, name: "Claude Brasseur", category: "cinema", dead: true, year: 2020, birth: 1936, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Claude_Brasseur_2013.jpg/400px-Claude_Brasseur_2013.jpg", details: "Acteur français" },
+            { id: 29, name: "Brigitte Bardot", category: "cinema", dead: false, birth: 1934, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Brigitte_Bardot_1962.jpg/400px-Brigitte_Bardot_1962.jpg", details: "Actrice et militante" },
+            { id: 30, name: "Gérard Depardieu", category: "cinema", dead: false, birth: 1948, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/G%C3%A9rard_Depardieu_2015.jpg/400px-G%C3%A9rard_Depardieu_2015.jpg", details: "Acteur de cinéma" },
+            { id: 31, name: "Marion Cotillard", category: "cinema", dead: false, birth: 1975, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Marion_Cotillard_Cannes_2019.jpg/400px-Marion_Cotillard_Cannes_2019.jpg", details: "Actrice oscarisée" },
+            { id: 32, name: "Michel Piccoli", category: "cinema", dead: true, year: 2020, birth: 1925, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Michel_Piccoli_2009.jpg/400px-Michel_Piccoli_2009.jpg", details: "Acteur et réalisateur" }
+        ];
+
+        /* ================= GAME STATE ================= */
         let currentCategory = 'all';
         let queue = [];
-        let currentPerson = null;
+        let currentCeleb = null;
         let score = 0;
         let streak = 0;
         let bestScore = parseInt(localStorage.getItem('mort_best_score') || '0', 10);
@@ -285,6 +335,9 @@
         let timerInterval = null;
         const maxTimer = 10;
 
+        /* ================= GAME LOGIC ================= */
+
+        // Change Active Screen
         function showScreen(screenName) {
             document.getElementById('screen-start').classList.add('hidden');
             document.getElementById('screen-game').classList.add('hidden');
@@ -294,7 +347,8 @@
             document.getElementById(`screen-${screenName}`).classList.add('flex');
         }
 
-        async function startGame(category) {
+        // Start Game
+        function startGame(category) {
             currentCategory = category;
             score = 0;
             streak = 0;
@@ -302,95 +356,53 @@
             document.getElementById('game-score').innerText = score;
             document.getElementById('game-best').innerText = bestScore;
 
-            let names = [];
-            if (category === 'random') {
-                names = [].concat(...Object.values(database));
-            } else {
-                names = database[category] || [];
-            }
+            // Prepare Deck / Queue
+            let items = category === 'all' 
+                ? [...CELEBRITIES] 
+                : CELEBRITIES.filter(c => c.category === category);
             
-            queue = names.sort(() => Math.random() - 0.5);
+            // Shuffle
+            queue = items.sort(() => Math.random() - 0.5);
 
             showScreen('game');
-            await loadNextPerson();
+            nextQuestion();
         }
 
-        async function loadNextPerson() {
-            clearInterval(timerInterval);
-            
+        // Display Next Celebrity Question
+        function nextQuestion() {
             if (queue.length === 0) {
-                let names = currentCategory === 'random' 
-                    ? [].concat(...Object.values(database)) 
-                    : database[currentCategory];
-                queue = names.sort(() => Math.random() - 0.5);
+                // Refill queue if user finishes all celebrities
+                let items = currentCategory === 'all' 
+                    ? [...CELEBRITIES] 
+                    : CELEBRITIES.filter(c => c.category === currentCategory);
+                queue = items.sort(() => Math.random() - 0.5);
             }
 
-            const name = queue.pop();
-            document.getElementById('celeb-name').innerText = "CHARGEMENT...";
-            document.getElementById('celeb-details').innerText = "Interrogation de Wikipédia...";
-            document.getElementById('celeb-image').src = "";
+            currentCeleb = queue.pop();
 
-            try {
-                // Requête API REST officielle Wikipédia FR
-                const res = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
-                if (!res.ok) {
-                    loadNextPerson();
-                    return;
-                }
-                const data = await res.json();
+            // Reset image fallback
+            const imgEl = document.getElementById('celeb-image');
+            const fallbackEl = document.getElementById('image-fallback');
+            imgEl.classList.remove('hidden');
+            fallbackEl.classList.add('hidden');
+            imgEl.src = currentCeleb.img;
 
-                // Sécurité : si pas de photo miniature, on passe direct au suivant
-                if (!data.thumbnail || !data.thumbnail.source) {
-                    loadNextPerson();
-                    return;
-                }
+            // Set Details
+            document.getElementById('celeb-name').innerText = currentCeleb.name;
+            document.getElementById('celeb-details').innerText = `${currentCeleb.details} • Né(e) en ${currentCeleb.birth}`;
 
-                // Contournement des blocages CORS / Hotlinking des images Wikipédia via un proxy public
-                const rawImgUrl = data.thumbnail.source;
-                const safeImgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawImgUrl.replace(/^https?:\/\//, ''))}`;
-
-                // Analyse dynamique du texte Wikipédia pour détecter si la personne est décédée
-                const summaryText = (data.extract || "").toLowerCase();
-                const descText = (data.description || "").toLowerCase();
-                
-                const isDead = summaryText.includes("mort") || 
-                               summaryText.includes("décédé") || 
-                               summaryText.includes("décédée") ||
-                               descText.includes("mort") ||
-                               // Sécurités additionnelles sur les cas avérés
-                               name === "Jean-Marie Le Pen" || name === "Valéry Giscard d'Estaing" || 
-                               name === "Jacques Chirac" || name === "Johnny Hallyday" || 
-                               name === "Michel Delpech" || name === "Christophe (chanteur)" ||
-                               name === "Jean-Pierre Pernaut" || name === "Philippe Gildas" ||
-                               name === "Jean-Paul Belmondo" || name === "Alain Delon" || 
-                               name === "Claude Brasseur" || name === "Kofi Annan" ||
-                               name === "Serge Gainsbourg" || name === "Charles Aznavour" ||
-                               name === "Françoise Hardy" || name === "Patrick Juvet" ||
-                               name === "Jean-Luc Delarue" || name === "Jean Rochefort" ||
-                               name === "Michel Piccoli" || name === "Anouk Aimée" ||
-                               name === "Jean-Pierre Marielle" || name === "Élisabeth II" ||
-                               name === "Silvio Berlusconi" || name === "Mikhail Gorbachev" ||
-                               name === "Tina Turner" || name === "Igor Bogdanoff";
-
-                currentPerson = {
-                    title: data.title,
-                    dead: isDead,
-                    img: safeImgUrl,
-                    description: data.description || "Personnalité publique"
-                };
-
-                document.getElementById('celeb-name').innerText = currentPerson.title;
-                document.getElementById('celeb-details').innerText = currentPerson.description;
-                document.getElementById('celeb-image').src = currentPerson.img;
-                
-                startTimer();
-
-            } catch (e) {
-                // En cas d'erreur réseau, on passe au suivant pour ne pas bloquer le joueur
-                loadNextPerson();
-            }
+            // Reset & Start Timer
+            startTimer();
         }
 
+        // Image Load Error Handler
+        function handleImageError(img) {
+            img.classList.add('hidden');
+            document.getElementById('image-fallback').classList.remove('hidden');
+            document.getElementById('image-fallback').classList.add('flex');
+        }
+
+        // Timer Control
         function startTimer() {
             clearInterval(timerInterval);
             timerVal = 10;
@@ -415,10 +427,12 @@
             
             timerText.innerText = Math.ceil(timerVal);
 
-            const circumference = 2 * Math.PI * 20;
+            // Circular progress calculations
+            const circumference = 2 * Math.PI * 20; // r=20 -> ~125.6
             const offset = circumference - (timerVal / maxTimer) * circumference;
             timerCircle.style.strokeDashoffset = offset;
 
+            // Color changes based on urgency
             if (timerVal < 3) {
                 timerCircle.setAttribute('class', 'text-arcade-red transition-all duration-100 ease-linear');
             } else if (timerVal < 6) {
@@ -428,12 +442,14 @@
             }
         }
 
-        async function submitAnswer(guessedDead) {
+        // Player Answer Submission
+        function submitAnswer(guessedDead) {
             clearInterval(timerInterval);
 
-            const isCorrect = (guessedDead === currentPerson.dead);
+            const isCorrect = (guessedDead === currentCeleb.dead);
 
             if (isCorrect) {
+                // Calculation: Base 1000 + Time Bonus
                 const speedBonus = Math.round(timerVal * 100);
                 const pointsGained = 1000 + speedBonus;
                 score += pointsGained;
@@ -446,13 +462,16 @@
                     document.getElementById('game-best').innerText = bestScore;
                 }
 
-                await loadNextPerson();
+                nextQuestion();
             } else {
-                let statusText = currentPerson.dead ? "est MORT(E)" : "est EN VIE !";
-                gameOver(`Faux ! ${currentPerson.title} ${statusText}`);
+                let statusText = currentCeleb.dead 
+                    ? `Mort(e) en ${currentCeleb.year}` 
+                    : "Est toujours de ce monde !";
+                gameOver(`Faux ! ${currentCeleb.name} : ${statusText}`);
             }
         }
 
+        // Trigger Game Over
         function gameOver(reason) {
             clearInterval(timerInterval);
             
@@ -460,6 +479,7 @@
             document.getElementById('final-score').innerText = score;
             document.getElementById('final-streak').innerText = streak;
 
+            // Show or Hide Pseudo Input based on Score (> 0)
             const inputContainer = document.getElementById('arcade-input-container');
             if (score > 0) {
                 inputContainer.classList.remove('hidden');
@@ -471,6 +491,7 @@
             showScreen('gameover');
         }
 
+        /* ================= HIGH SCORES / LEADERBOARD ================= */
         function getHighScores() {
             const raw = localStorage.getItem('mort_leaderboard');
             if (!raw) {
@@ -489,4 +510,46 @@
 
         function saveHighScore() {
             const input = document.getElementById('player-pseudo');
-            let pseudo = (
+            let pseudo = (input.value || 'ANON').trim().toUpperCase().substring(0, 5);
+            if (!pseudo) pseudo = 'ANON';
+
+            let scores = getHighScores();
+            scores.push({ pseudo, score });
+            scores.sort((a, b) => b.score - a.score);
+            scores = scores.slice(0, 5); // Keep top 5
+
+            localStorage.setItem('mort_leaderboard', JSON.stringify(scores));
+            
+            // Hide Input Container after saving
+            document.getElementById('arcade-input-container').classList.add('hidden');
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const listEl = document.getElementById('leaderboard-list');
+            const scores = getHighScores();
+
+            listEl.innerHTML = scores.map((item, index) => `
+                <li class="flex justify-between items-center bg-black/50 p-2 rounded border border-gray-800">
+                    <span class="flex items-center gap-3">
+                        <span class="${index === 0 ? 'text-arcade-yellow' : 'text-gray-500'}">#${index + 1}</span>
+                        <span class="text-arcade-cyan font-bold">${escapeHtml(item.pseudo)}</span>
+                    </span>
+                    <span class="text-white">${item.score} PTS</span>
+                </li>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+
+        // Initialize High Score UI on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('game-best').innerText = bestScore;
+        });
+    </script>
+</body>
+</html>
