@@ -179,14 +179,18 @@
                 const lastBracket = content.lastIndexOf(']');
                 
                 if (firstBracket !== -1 && lastBracket !== -1) {
-                    const jsonString = content.substring(firstBracket, lastBracket + 1);
+                    let jsonString = content.substring(firstBracket, lastBracket + 1);
+                    // Nettoyage des virgules superflues qui font planter le parseur
+                    jsonString = jsonString.replace(/,\s*([\]}])/g, '$1');
+                    
                     customCelebrities = JSON.parse(jsonString);
                     renderTable();
                 } else {
                     alert("Format de fichier non reconnu.");
                 }
             } catch (err) {
-                alert("Erreur lors de la lecture : " + err);
+                alert("Erreur lors de la lecture : " + err.message);
+                console.error(err);
             }
         }
 
@@ -235,7 +239,6 @@
             }
         }
 
-        // Remonter une fiche existante dans le formulaire pour modification
         function editCelebrity(index) {
             const c = customCelebrities[index];
             document.getElementById('editIndex').value = index;
@@ -271,10 +274,8 @@
             if(dead && year) celebData.year = year;
 
             if(editIndex >= 0) {
-                // Mode édition : on remplace l'élément existant
                 customCelebrities[editIndex] = celebData;
             } else {
-                // Mode ajout : on ajoute à la fin
                 customCelebrities.push(celebData);
             }
 
