@@ -172,7 +172,7 @@
 
             <div class="w-full bg-gray-900 border-2 border-arcade-purple rounded-2xl p-4 sm:p-6 flex flex-col items-center space-y-4 shadow-2xl relative overflow-hidden">
                 <div class="relative w-48 h-48 sm:w-60 sm:h-60 rounded-xl overflow-hidden border-2 border-arcade-cyan shadow-neon-cyan bg-gray-800 flex items-center justify-center">
-                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';">
+                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover">
                 </div>
 
                 <div class="text-center space-y-1">
@@ -247,47 +247,47 @@
         Mort ou Pas Mort ? &copy; Arcade Edition
     </footer>
 
-    <!-- JavaScript avec données vérifiées et anti-doublons -->
+    <!-- JavaScript avec appels API Wikipedia en direct -->
     <script>
         const CELEBRITIES = [
             // POLITIQUE
-            { name: "Jacques Chirac", category: "politique", dead: true, year: 2019, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Jacques_Chirac_in_1997.jpg/500px-Jacques_Chirac_in_1997.jpg", details: "Ancien Président de la République" },
-            { name: "Valéry Giscard d'Estaing", category: "politique", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg/500px-Val%C3%A9ry_Giscard_d%27Estaing_1978.jpg", details: "Ancien Président de la République" },
-            { name: "Jean-Marie Le Pen", category: "politique", dead: true, year: 2025, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Jean-Marie_Le_Pen_2014.jpg/500px-Jean-Marie_Le_Pen_2014.jpg", details: "Fondateur du Front National" },
-            { name: "Nicolas Sarkozy", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Nicolas_Sarkozy_in_2010.jpg/500px-Nicolas_Sarkozy_in_2010.jpg", details: "Ancien Président de la République" },
-            { name: "François Hollande", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Fran%C3%A7ois_Hollande_2015.jpg/500px-Fran%C3%A7ois_Hollande_2015.jpg", details: "Ancien Président de la République" },
-            { name: "Joe Biden", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Joe_Biden_presidential_portrait.jpg/500px-Joe_Biden_presidential_portrait.jpg", details: "Homme politique américain" },
-            { name: "Angela Merkel", category: "politique", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Angela_Merkel_2019_%28cropped%29.jpg/500px-Angela_Merkel_2019_%28cropped%29.jpg", details: "Ancienne Chancelière allemande" },
-            { name: "Silvio Berlusconi", category: "politique", dead: true, year: 2023, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Silvio_Berlusconi_2010.jpg/500px-Silvio_Berlusconi_2010.jpg", details: "Homme d'État italien" },
-            { name: "Élisabeth II", category: "politique", dead: true, year: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Queen_Elizabeth_II_in_March_2015.jpg/500px-Queen_Elizabeth_II_in_March_2015.jpg", details: "Reine du Royaume-Uni" },
+            { name: "Jacques Chirac", wikiTitle: "Jacques_Chirac", category: "politique", dead: true, year: 2019, details: "Ancien Président de la République" },
+            { name: "Valéry Giscard d'Estaing", wikiTitle: "Valéry_Giscard_d'Estaing", category: "politique", dead: true, year: 2020, details: "Ancien Président de la République" },
+            { name: "Jean-Marie Le Pen", wikiTitle: "Jean-Marie_Le_Pen", category: "politique", dead: true, year: 2025, details: "Fondateur du Front National" },
+            { name: "Nicolas Sarkozy", wikiTitle: "Nicolas_Sarkozy", category: "politique", dead: false, details: "Ancien Président de la République" },
+            { name: "François Hollande", wikiTitle: "François_Hollande", category: "politique", dead: false, details: "Ancien Président de la République" },
+            { name: "Joe Biden", wikiTitle: "Joe_Biden", category: "politique", dead: false, details: "Homme politique américain" },
+            { name: "Angela Merkel", wikiTitle: "Angela_Merkel", category: "politique", dead: false, details: "Ancienne Chancelière allemande" },
+            { name: "Silvio Berlusconi", wikiTitle: "Silvio_Berlusconi", category: "politique", dead: true, year: 2023, details: "Homme d'État italien" },
+            { name: "Élisabeth II", wikiTitle: "Élisabeth_II", category: "politique", dead: true, year: 2022, details: "Reine du Royaume-Uni" },
 
             // CHANTEURS
-            { name: "Johnny Hallyday", category: "chanteurs", dead: true, year: 2017, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Johnny_Hallyday_Cannes_2009.jpg/500px-Johnny_Hallyday_Cannes_2009.jpg", details: "Légende du rock français" },
-            { name: "Charles Aznavour", category: "chanteurs", dead: true, year: 2018, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Charles_Aznavour_2014.jpg/500px-Charles_Aznavour_2014.jpg", details: "Chanteur franco-arménien" },
-            { name: "Michel Delpech", category: "chanteurs", dead: true, year: 2016, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Michel_Delpech_2010.jpg/500px-Michel_Delpech_2010.jpg", details: "Chanteur populaire français" },
-            { name: "Christophe", category: "chanteurs", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Christophe_F%C3%AAte_de_l%27Huma_2013_-_002.jpg/500px-Christophe_F%C3%AAte_de_l%27Huma_2013_-_002.jpg", details: "Interprète des Mots Bleus" },
-            { name: "Françoise Hardy", category: "chanteurs", dead: true, year: 2024, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Fran%C3%A7oise_Hardy_1970.jpg/500px-Fran%C3%A7oise_Hardy_1970.jpg", details: "Icône des années yé-yé" },
-            { name: "Michel Sardou", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Michel_Sardou_2011.jpg/500px-Michel_Sardou_2011.jpg", details: "Chanteur de variété française" },
-            { name: "Line Renaud", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Line_Renaud_2013.jpg/500px-Line_Renaud_2013.jpg", details: "Chanteuse et actrice" },
-            { name: "Renaud", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Renaud_Cannes_2004.jpg/500px-Renaud_Cannes_2004.jpg", details: "Auteur-compositeur-interprète" },
-            { name: "Alain Souchon", category: "chanteurs", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Alain_Souchon_Cabaret_Frapp%C3%A9_2015.jpg/500px-Alain_Souchon_Cabaret_Frapp%C3%A9_2015.jpg", details: "Chanteur poète français" },
+            { name: "Johnny Hallyday", wikiTitle: "Johnny_Hallyday", category: "chanteurs", dead: true, year: 2017, details: "Légende du rock français" },
+            { name: "Charles Aznavour", wikiTitle: "Charles_Aznavour", category: "chanteurs", dead: true, year: 2018, details: "Chanteur franco-arménien" },
+            { name: "Michel Delpech", wikiTitle: "Michel_Delpech", category: "chanteurs", dead: true, year: 2016, details: "Chanteur populaire français" },
+            { name: "Christophe", wikiTitle: "Christophe_(chanteur)", category: "chanteurs", dead: true, year: 2020, details: "Interprète des Mots Bleus" },
+            { name: "Françoise Hardy", wikiTitle: "Françoise_Hardy", category: "chanteurs", dead: true, year: 2024, details: "Icône des années yé-yé" },
+            { name: "Michel Sardou", wikiTitle: "Michel_Sardou", category: "chanteurs", dead: false, details: "Chanteur de variété française" },
+            { name: "Line Renaud", wikiTitle: "Line_Renaud", category: "chanteurs", dead: false, details: "Chanteuse et actrice" },
+            { name: "Renaud", wikiTitle: "Renaud", category: "chanteurs", dead: false, details: "Auteur-compositeur-interprète" },
+            { name: "Alain Souchon", wikiTitle: "Alain_Souchon", category: "chanteurs", dead: false, details: "Chanteur poète français" },
 
             // TV / MÉDIAS
-            { name: "Jean-Pierre Pernaut", category: "tv", dead: true, year: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Jean-Pierre_Pernaut_2017.jpg/500px-Jean-Pierre_Pernaut_2017.jpg", details: "Présentateur du JT de 13H" },
-            { name: "Thierry Ardisson", category: "tv", dead: true, year: 2025, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Thierry_Ardisson_2013.jpg/500px-Thierry_Ardisson_2013.jpg", details: "Animateur et producteur TV" },
-            { name: "Philippe Gildas", category: "tv", dead: true, year: 2018, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Philippe_Gildas_2011.jpg/500px-Philippe_Gildas_2011.jpg", details: "Journaliste et animateur TV" },
-            { name: "Jean-Luc Delarue", category: "tv", dead: true, year: 2012, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Michel_Drucker_2012.jpg/500px-Michel_Drucker_2012.jpg", details: "Animateur producteur" },
-            { name: "Michel Drucker", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Michel_Drucker_2012.jpg/500px-Michel_Drucker_2012.jpg", details: "Monstre sacré du petit écran" },
-            { name: "Patrick Sébastien", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Patrick_S%C3%A9bastien_2010.jpg/500px-Patrick_S%C3%A9bastien_2010.jpg", details: "Animateur et amuseur public" },
-            { name: "Jean-Pierre Foucault", category: "tv", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Jean-Pierre_Foucault_2012.jpg/500px-Jean-Pierre_Foucault_2012.jpg", details: "Présentateur de télévision" },
+            { name: "Jean-Pierre Pernaut", wikiTitle: "Jean-Pierre_Pernaut", category: "tv", dead: true, year: 2022, details: "Présentateur du JT de 13H" },
+            { name: "Thierry Ardisson", wikiTitle: "Thierry_Ardisson", category: "tv", dead: true, year: 2025, details: "Animateur et producteur TV" },
+            { name: "Philippe Gildas", wikiTitle: "Philippe_Gildas", category: "tv", dead: true, year: 2018, details: "Journaliste et animateur TV" },
+            { name: "Jean-Luc Delarue", wikiTitle: "Jean-Luc_Delarue", category: "tv", dead: true, year: 2012, details: "Animateur producteur" },
+            { name: "Michel Drucker", wikiTitle: "Michel_Drucker", category: "tv", dead: false, details: "Monstre sacré du petit écran" },
+            { name: "Patrick Sébastien", wikiTitle: "Patrick_Sébastien", category: "tv", dead: false, details: "Animateur et amuseur public" },
+            { name: "Jean-Pierre Foucault", wikiTitle: "Jean-Pierre_Foucault", category: "tv", dead: false, details: "Présentateur de télévision" },
 
             // ACTEURS
-            { name: "Jean-Paul Belmondo", category: "acteur", dead: true, year: 2021, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Jean-Paul_Belmondo_Cannes_2011.jpg/500px-Jean-Paul_Belmondo_Cannes_2011.jpg", details: "Le Magnifique du cinéma français" },
-            { name: "Alain Delon", category: "acteur", dead: true, year: 2024, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Alain_Delon_Cannes_2013.jpg/500px-Alain_Delon_Cannes_2013.jpg", details: "Légende du cinéma français" },
-            { name: "Claude Brasseur", category: "acteur", dead: true, year: 2020, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Claude_Brasseur_Cabourg_2016.jpg/500px-Claude_Brasseur_Cabourg_2016.jpg", details: "Acteur français de talent" },
-            { name: "Brigitte Bardot", category: "acteur", dead: true, year: 2026, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Brigitte_Bardot_1967.jpg/500px-Brigitte_Bardot_1967.jpg", details: "Icône du cinéma international" },
-            { name: "Pierre Richard", category: "acteur", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Pierre_Richard_Cabaret_Frapp%C3%A9_2015.jpg/500px-Pierre_Richard_Cabaret_Frapp%C3%A9_2015.jpg", details: "Le Grand Blond" },
-            { name: "Gérard Depardieu", category: "acteur", dead: false, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/G%C3%A9rard_Depardieu_2015.jpg/500px-G%C3%A9rard_Depardieu_2015.jpg", details: "Acteur de cinéma" }
+            { name: "Jean-Paul Belmondo", wikiTitle: "Jean-Paul_Belmondo", category: "acteur", dead: true, year: 2021, details: "Le Magnifique du cinéma français" },
+            { name: "Alain Delon", wikiTitle: "Alain_Delon", category: "acteur", dead: true, year: 2024, details: "Légende du cinéma français" },
+            { name: "Claude Brasseur", wikiTitle: "Claude_Brasseur", category: "acteur", dead: true, year: 2020, details: "Acteur français de talent" },
+            { name: "Brigitte Bardot", wikiTitle: "Brigitte_Bardot", category: "acteur", dead: true, year: 2026, details: "Icône du cinéma international" },
+            { name: "Pierre Richard", wikiTitle: "Pierre_Richard", category: "acteur", dead: false, details: "Le Grand Blond" },
+            { name: "Gérard Depardieu", wikiTitle: "Gérard_Depardieu", category: "acteur", dead: false, details: "Acteur de cinéma" }
         ];
 
         let currentCategory = 'all';
@@ -328,7 +328,23 @@
             loadNextPerson();
         }
 
-        function loadNextPerson() {
+        async function fetchWikiImage(wikiTitle) {
+            const url = `https://fr.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(wikiTitle)}&prop=pageimages&pithumbsize=500&format=json&origin=*`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const pages = data.query.pages;
+                const pageId = Object.keys(pages)[0];
+                if (pages[pageId] && pages[pageId].thumbnail && pages[pageId].thumbnail.source) {
+                    return pages[pageId].thumbnail.source;
+                }
+            } catch (e) {
+                console.error("Erreur API Wikipedia", e);
+            }
+            return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
+        }
+
+        async function loadNextPerson() {
             clearInterval(timerInterval);
             
             if (queue.length === 0) {
@@ -342,7 +358,13 @@
 
             document.getElementById('celeb-name').innerText = currentPerson.name;
             document.getElementById('celeb-details').innerText = currentPerson.details;
-            document.getElementById('celeb-image').src = currentPerson.img;
+            
+            // Affichage d'un placeholder de chargement et appel direct de l'API Wikipedia
+            const imgElement = document.getElementById('celeb-image');
+            imgElement.src = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
+            
+            const realImgUrl = await fetchWikiImage(currentPerson.wikiTitle);
+            imgElement.src = realImgUrl;
             
             startTimer();
         }
