@@ -45,9 +45,9 @@
         <div class="bg-gray-900 border-2 border-arcade-yellow p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
                 <h2 class="font-arcade text-arcade-yellow text-xs">CHARGER LA BASE EXISTANTE</h2>
-                <p class="text-xs text-gray-400">Sélectionnez votre fichier <code class="text-arcade-cyan">celebs.js</code> ou laissez charger si hébergé.</p>
+                <p class="text-xs text-gray-400">Sélectionnez votre fichier <code class="text-arcade-cyan">celebs.js</code> local si le chargement automatique n'a pas tourné.</p>
             </div>
-            <input type="file" id="fileInput" accept=".js,.txt" onchange="loadCurrentFile(event)" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-arcade file:bg-arcade-yellow file:text-black hover:file:bg-white cursor-pointer">
+            <input type="file" id="fileInput" accept=".js" onchange="loadCurrentFile(event)" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-arcade file:bg-arcade-yellow file:text-black hover:file:bg-white cursor-pointer">
         </div>
 
         <!-- Formulaire de recherche, ajout ou modification -->
@@ -64,14 +64,12 @@
             <div id="previewContainer" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-gray-700 items-center">
                 <div class="flex justify-center flex-col items-center gap-2">
                     <img id="prevImg" src="" alt="Aperçu" class="w-32 h-32 object-cover rounded-xl border-2 border-arcade-pink">
-                    <button onclick="document.getElementById('prevImgUrl').removeAttribute('disabled')" class="text-[10px] text-arcade-cyan underline">Modifier l'URL de l'image</button>
                 </div>
                 <div class="sm:col-span-2 space-y-3">
                     <div>
                         <label class="block text-xs text-gray-400 font-arcade">NOM COMPLET</label>
                         <input type="text" id="prevName" class="w-full bg-black border border-gray-700 p-2 rounded text-white font-bold">
                     </div>
-                    <!-- Champ caché pour stocker l'index si on est en mode édition -->
                     <input type="hidden" id="editIndex" value="-1">
                     
                     <div class="grid grid-cols-2 gap-2">
@@ -148,56 +146,46 @@
     <script>
         let customCelebrities = [];
 
-        // Chargement automatique au démarrage si hébergé
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const res = await fetch('celebs.js');
-                if(res.ok) {
-                    const text = await res.text();
-                    parseAndLoadJS(text);
+        // 1. TENTATIVE DE CHARGEMENT AUTO (Méthode identique à index.html)
+        window.addEventListener('DOMContentLoaded', () => {
+            loadScript('celebs.js', () => {
+                if (typeof CELEBRITIES !== 'undefined') {
+                    customCelebrities = [...CELEBRITIES];
+                    renderTable();
                 }
-            } catch(e) {
-                console.log("Chargement automatique impossible (hors serveur). Utilisez l'import manuel.");
-            }
+            });
         });
 
+        function loadScript(src, callback) {
+            const script = document.createElement('script');
+            script.src = src + '?v=' + Date.now(); // évite le cache
+            script.onload = callback;
+            script.onerror = () => console.log("Chargement auto de celebs.js impossible (hors serveur).");
+            document.head.appendChild(script);
+        }
+
+        // 2. IMPORT MANUEL VIA INJECTION DE SCRIPT (Lecture native sans JSON.parse)
         function loadCurrentFile(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                parseAndLoadJS(e.target.result);
+                // On injecte le code dans une balise script pour que le navigateur le parse comme du vrai JS
+                const script = document.createElement('script');
+                script.text = e.target.result;
+                document.head.appendChild(script);
+
+                // Récupération de la variable globale produite par le fichier
+                if (typeof CELEBRITIES !== 'undefined') {
+                    customCelebrities = [...CELEBRITIES];
+                    renderTable();
+                    alert(`Succès ! ${customCelebrities.length} célébrités chargées.`);
+                } else {
+                    alert("Le fichier a été lu mais aucune variable 'CELEBRITIES' n'a été trouvée dedans.");
+                }
             };
             reader.readAsText(file);
-        }
-
-        function parseAndLoadJS(text) {
-            try {
-                let content = text.trim();
-                
-                // 1. Isoler uniquement le tableau entre le premier '[' et le dernier ']'
-                const firstBracket = content.indexOf('[');
-                const lastBracket = content.lastIndexOf(']');
-                
-                if (firstBracket !== -1 && lastBracket !== -1) {
-                    let jsonString = content.substring(firstBracket, lastBracket + 1);
-                    
-                    // 2. Nettoyer les commentaires JS (// ou /* */) qui provoquent l'erreur unexpected token '/'
-                    jsonString = jsonString.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*/g, '$1');
-
-                    // 3. Nettoyer les virgules traînantes en fin d'objets ou tableaux
-                    jsonString = jsonString.replace(/,\s*([\]}])/g, '$1');
-                    
-                    customCelebrities = JSON.parse(jsonString);
-                    renderTable();
-                } else {
-                    alert("Format de fichier non reconnu : crochets '[' et ']' introuvables.");
-                }
-            } catch (err) {
-                alert("Erreur lors de la lecture du fichier : " + err.message);
-                console.error("Contenu brut :", text);
-            }
         }
 
         async function fetchWikiData() {
