@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test API Wikipedia</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f4f9; }
+        input, button { padding: 10px; font-size: 16px; margin-right: 5px; }
+        input { width: 60%; }
+        pre { background: #222; color: #0f0; padding: 15px; border-radius: 5px; overflow-x: auto; max-height: 200px; }
+        .result-box { margin-top: 20px; background: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        img { max-width: 200px; display: block; margin-top: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+    <h1>Testeur d'API Wikipedia</h1>
+    <p>Entrez le nom exact de la page (ex: <code>Jacques_Chirac</code> ou <code>Charles_Aznavour</code>) :</p>
+    
+    <input type="text" id="celebInput" value="Jacques_Chirac">
+    <button onclick="testApi()">Tester</button>
+
+    <div class="result-box">
+        <h3>Image trouvée :</h3>
+        <img id="resultImage" src="" alt="Aperçu de l'image">
+        
+        <h3>URL de l'image :</h3>
+        <p id="resultUrl" style="word-break: break-all; font-family: monospace; color: #0066cc;"></p>
+
+        <h3>Réponse brute de l'API (JSON) :</h3>
+        <pre id="jsonOutput">En attente d'une requête...</pre>
+    </div>
+
+    <script>
+        async function testApi() {
+            const title = document.getElementById('celebInput').value.trim();
+            const jsonOutput = document.getElementById('jsonOutput');
+            const resultUrl = document.getElementById('resultUrl');
+            const resultImage = document.getElementById('resultImage');
+
+            // Requête vers l'API MediaWiki française avec origin=* pour contourner le CORS
+            const url = `https://fr.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=pageimages&pithumbsize=500&format=json&origin=*`;
+
+            jsonOutput.innerText = "Chargement en cours...";
+            resultUrl.innerText = "";
+            resultImage.src = "";
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                // Affichage du JSON brut pour inspection
+                jsonOutput.innerText = JSON.stringify(data, null, 2);
+
+                // Extraction sécurisée de l'URL de l'image
+                const pages = data.query.pages;
+                const pageId = Object.keys(pages)[0];
+
+                if (pages[pageId] && pages[pageId].thumbnail && pages[pageId].thumbnail.source) {
+                    const imgSource = pages[pageId].thumbnail.source;
+                    resultUrl.innerText = imgSource;
+                    resultImage.src = imgSource;
+                } else {
+                    resultUrl.innerText = "Aucune image trouvée (propriété 'thumbnail' absente pour cette page).";
+                }
+
+            } catch (error) {
+                jsonOutput.innerText = "Erreur lors de la requête : " + error;
+            }
+        }
+    </script>
+
+</body>
+</html>
