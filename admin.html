@@ -148,7 +148,7 @@
     <script>
         let customCelebrities = [];
 
-        // Tentative de chargement automatique au démarrage si le fichier est accessible
+        // Chargement automatique au démarrage si hébergé
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 const res = await fetch('celebs.js');
@@ -157,7 +157,7 @@
                     parseAndLoadJS(text);
                 }
             } catch(e) {
-                console.log("Chargement automatique de celebs.js impossible (hors serveur). Utilisez l'import manuel.");
+                console.log("Chargement automatique impossible (hors serveur). Utilisez l'import manuel.");
             }
         });
 
@@ -176,24 +176,27 @@
             try {
                 let content = text.trim();
                 
-                // Si le fichier contient une affectation JS, on isole le contenu entre crochets
+                // 1. Isoler uniquement le tableau entre le premier '[' et le dernier ']'
                 const firstBracket = content.indexOf('[');
                 const lastBracket = content.lastIndexOf(']');
                 
                 if (firstBracket !== -1 && lastBracket !== -1) {
                     let jsonString = content.substring(firstBracket, lastBracket + 1);
                     
-                    // Nettoyage sécurisé pour éliminer les virgules superflues en fin de tableau ou d'objet
+                    // 2. Nettoyer les commentaires JS (// ou /* */) qui provoquent l'erreur unexpected token '/'
+                    jsonString = jsonString.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*/g, '$1');
+
+                    // 3. Nettoyer les virgules traînantes en fin d'objets ou tableaux
                     jsonString = jsonString.replace(/,\s*([\]}])/g, '$1');
                     
                     customCelebrities = JSON.parse(jsonString);
                     renderTable();
                 } else {
-                    alert("Format de fichier non reconnu (crochets introuvables).");
+                    alert("Format de fichier non reconnu : crochets '[' et ']' introuvables.");
                 }
             } catch (err) {
-                alert("Erreur lors de la lecture du fichier JS : " + err.message);
-                console.error("Contenu brut posant problème :", text);
+                alert("Erreur lors de la lecture du fichier : " + err.message);
+                console.error("Contenu brut :", text);
             }
         }
 
