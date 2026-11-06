@@ -1,327 +1,492 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mort ou Pas Mort ?</title>
+    <title>Mort ou Pas Mort ? - Arcade Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        arcade: ['"Press Start 2P"', 'cursive'],
+                        sans: ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        arcade: {
+                            purple: '#1a0b2e',
+                            dark: '#0f051d',
+                            pink: '#ff007f',
+                            cyan: '#00f3ff',
+                            yellow: '#ffe600',
+                            red: '#ff2a6d',
+                            green: '#05ffa1'
+                        }
+                    },
+                    boxShadow: {
+                        'neon-pink': '0 0 15px rgba(255, 0, 127, 0.7), 0 0 30px rgba(255, 0, 127, 0.4)',
+                        'neon-cyan': '0 0 15px rgba(0, 243, 255, 0.7), 0 0 30px rgba(0, 243, 255, 0.4)',
+                        'neon-green': '0 0 15px rgba(5, 255, 161, 0.7), 0 0 30px rgba(5, 255, 161, 0.4)',
+                        'neon-red': '0 0 15px rgba(255, 42, 109, 0.7), 0 0 30px rgba(255, 42, 109, 0.4)'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+        .scanlines {
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.03),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.03)
+            );
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
         }
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: #2a2a2a;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            border-radius: 10px;
-            box-sizing: border-box;
-            text-align: center;
-            border: 2px solid #444;
+
+        .text-glow-pink {
+            text-shadow: 0 0 8px #ff007f, 0 0 20px #ff007f;
         }
-        h1 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: #ff5555;
-            text-transform: uppercase;
+        .text-glow-cyan {
+            text-shadow: 0 0 8px #00f3ff, 0 0 20px #00f3ff;
         }
-        .hud {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            background: #111;
-            padding: 8px 12px;
-            border-radius: 5px;
+        .text-glow-yellow {
+            text-shadow: 0 0 8px #ffe600, 0 0 20px #ffe600;
         }
-        .timer {
-            color: #ff5555;
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
         }
-        .photo-box {
-            width: 100%;
-            height: 300px;
-            background: #000;
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            border: 1px solid #444;
+        .pulse-btn {
+            animation: pulseGlow 2s infinite ease-in-out;
         }
-        .photo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
-        .name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #55ffcc;
-        }
-        .actions {
-            display: flex;
-            gap: 15px;
-        }
-        .btn {
-            flex: 1;
-            padding: 15px;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            color: white;
-            text-transform: uppercase;
-        }
-        .btn-alive {
-            background-color: #2e8b57;
-        }
-        .btn-dead {
-            background-color: #b22222;
-        }
-        .btn:active {
-            opacity: 0.8;
-            transform: scale(0.98);
-        }
-        .category-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .btn-cat {
-            background: #333;
-            color: #fff;
-            padding: 15px;
-            font-size: 1.1rem;
-            border: 1px solid #555;
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: left;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        .btn-cat:hover {
-            background: #444;
-        }
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
-        .initials-input {
-            font-size: 1.5rem;
-            width: 45px;
-            height: 45px;
-            text-align: center;
-            text-transform: uppercase;
-            background: #111;
-            color: #fff;
-            border: 1px solid #555;
-            border-radius: 4px;
-        }
-        .highscores {
-            margin-top: 15px;
-            text-align: left;
-            background: #1a1a1a;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #444;
-        }
-        .highscore-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid #333;
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
         }
     </style>
 </head>
-<body>
+<body class="bg-arcade-dark text-white font-sans min-h-screen flex flex-col justify-between overflow-x-hidden select-none relative">
+    
+    <div class="fixed inset-0 scanlines z-50"></div>
+    <div class="fixed inset-0 bg-[radial-gradient(#ff007f_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none"></div>
 
-<div class="container">
-    <!-- ÉCRAN ACCUEIL -->
-    <div id="screen-home" class="screen active">
-        <h1>💀 MORT OU PAS MORT ? 💀</h1>
-        <p style="margin-bottom: 20px; color: #aaa; font-size: 0.9rem;">Choisis ta catégorie (10s par photo, erreur fatale !)</p>
-        <div class="category-grid">
-            <button class="btn-cat" onclick="startCategory('politique')">🏛️ Politique</button>
-            <button class="btn-cat" onclick="startCategory('chanteurs')">🎤 Chanteurs</button>
-            <button class="btn-cat" onclick="startCategory('tv')">📺 Médias / TV</button>
-            <button class="btn-cat" onclick="startCategory('acteur')">🎬 Acteurs</button>
-            <button class="btn-cat" onclick="startCategory('random')">🎲 Aléatoire (Tout)</button>
-        </div>
-    </div>
+    <main class="container mx-auto px-4 py-6 max-w-4xl flex-grow flex flex-col justify-center items-center z-10">
 
-    <!-- ÉCRAN DE JEU -->
-    <div id="screen-game" class="screen">
-        <div class="hud">
-            <div id="hud-score">SCORE: 0</div>
-            <div id="hud-timer" class="timer">10s</div>
-        </div>
-        <div class="photo-box">
-            <img id="celeb-img" src="" alt="Photo">
-        </div>
-        <div id="celeb-name" class="name">Chargement...</div>
-        <div class="actions">
-            <button class="btn btn-alive" onclick="answer(false)">🚫 Pas mort</button>
-            <button class="btn btn-dead" onclick="answer(true)">💀 Mort</button>
-        </div>
-    </div>
-
-    <!-- ÉCRAN GAME OVER -->
-    <div id="screen-gameover" class="screen">
-        <h1 style="color: #ff5555;">GAME OVER</h1>
-        <p id="gameover-reason" style="color: #ff9999; font-weight: bold;"></p>
-        <h2 id="final-score" style="color: #55ffcc;">SCORE : 0</h2>
-
-        <div id="score-section" style="margin: 15px 0;">
-            <p style="color: #aaa;">Entre tes 5 initiales :</p>
-            <div style="display: flex; justify-content: center; gap: 5px;">
-                <input type="text" maxlength="1" class="initials-input" id="c1" value="A">
-                <input type="text" maxlength="1" class="initials-input" id="c2" value="R">
-                <input type="text" maxlength="1" class="initials-input" id="c3" value="C">
-                <input type="text" maxlength="1" class="initials-input" id="c4" value="A">
-                <input type="text" maxlength="1" class="initials-input" id="c5" value="D">
+        <!-- ================= SCREEN 1: CATEGORY SELECTION ================= -->
+        <section id="screen-start" class="w-full flex flex-col items-center text-center space-y-8 py-4">
+            <div class="space-y-3">
+                <h1 class="font-arcade text-3xl sm:text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-arcade-pink via-arcade-yellow to-arcade-cyan text-glow-pink tracking-wider">
+                    MORT OU PAS MORT ?
+                </h1>
+                <p class="text-gray-400 font-semibold tracking-widest uppercase text-sm sm:text-base">
+                    Le Quiz Rétro Pop-Culture Sans Pitié
+                </p>
             </div>
-            <button class="btn" style="background: #555; margin-top: 10px; width: 100%;" onclick="saveScore()">Enregistrer</button>
-        </div>
 
-        <div class="highscores" id="highscores-list"></div>
+            <div class="bg-arcade-purple/80 border-2 border-arcade-cyan/50 p-4 sm:p-6 rounded-xl max-w-lg shadow-neon-cyan backdrop-blur">
+                <h2 class="font-arcade text-arcade-yellow text-xs sm:text-sm mb-3">RÈGLES DU JEU</h2>
+                <ul class="text-left text-sm sm:text-base text-gray-200 space-y-2">
+                    <li class="flex items-center gap-2">
+                        <span class="text-arcade-pink font-arcade">⚡</span>
+                        <span><strong>10 secondes</strong> par célébrité.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-arcade-green font-arcade">🔥</span>
+                        <span>Plus vous êtes rapide, <strong>plus vous marquez de points</strong>.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-arcade-red font-arcade">💀</span>
+                        <span><strong>Une seule erreur = GAME OVER !</strong></span>
+                    </li>
+                </ul>
+            </div>
 
-        <button class="btn btn-cat" style="margin-top: 15px; text-align: center;" onclick="goHome()">Rejouer</button>
-    </div>
-</div>
+            <div class="w-full max-w-md space-y-4">
+                <h3 class="font-arcade text-gray-300 text-xs sm:text-sm tracking-wide">CHOISIS TA CATÉGORIE</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button onclick="startGame('politique')" class="group relative p-4 bg-gray-900 border-2 border-arcade-pink rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-pink hover:text-black transition-all duration-200 shadow-neon-pink">
+                        🏛️ POLITIQUE
+                    </button>
+                    <button onclick="startGame('chanteurs')" class="group relative p-4 bg-gray-900 border-2 border-arcade-cyan rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-cyan hover:text-black transition-all duration-200 shadow-neon-cyan">
+                        🎤 CHANTEURS
+                    </button>
+                    <button onclick="startGame('tv')" class="group relative p-4 bg-gray-900 border-2 border-arcade-yellow rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-yellow hover:text-black transition-all duration-200 shadow-neon-yellow">
+                        📺 TV / MÉDIAS
+                    </button>
+                    <button onclick="startGame('acteur')" class="group relative p-4 bg-gray-900 border-2 border-arcade-green rounded-xl text-lg font-bold tracking-wider hover:bg-arcade-green hover:text-black transition-all duration-200 shadow-neon-green">
+                        🎬 ACTEURS
+                    </button>
+                </div>
 
-<script>
-    const database = {
-        politique: [
-            "Valéry Giscard d'Estaing", "Jacques Chirac", "Jean-Marie Le Pen", "Joe Biden", 
-            "Angela Merkel", "Kofi Annan", "François Hollande", "Nicolas Sarkozy", 
-            "Dominique Strauss-Kahn", "Laurent Fabius", "Édouard Balladur", "Alain Juppé"
-        ],
-        chanteurs: [
-            "Johnny Hallyday", "Michel Delpech", "Line Renaud", "Michel Sardou", 
-            "Alain Souchon", "Christophe (chanteur)", "Eddy Mitchell", "Serge Gainsbourg", 
-            "Charles Aznavour", "Françoise Hardy", "Patrick Juvet"
-        ],
-        tv: [
-            "Jean-Pierre Pernaut", "Michel Drucker", "Patrick Sébastien", "Philippe Gildas", 
-            "Thierry Ardisson", "Jean-Luc Delarue", "William Leymergie", "Denise Fabre",
-            "Évelyne Dhéliat", "Philippe Risoli", "Patrick Sabatier"
-        ],
-        acteur: [
-            "Jean-Paul Belmondo", "Alain Delon", "Pierre Richard", "Brigitte Bardot", 
-            "Claude Brasseur", "Jean Rochefort", "Michel Piccoli", "Gérard Depardieu",
-            "Anouk Aimée", "Catherine Deneuve", "Jean-Pierre Marielle"
-        ]
-    };
+                <button onclick="startGame('random')" class="w-full p-4 bg-gradient-to-r from-arcade-pink via-arcade-yellow to-arcade-cyan text-black font-arcade text-xs sm:text-sm rounded-xl hover:opacity-90 transition-opacity font-extrabold uppercase shadow-lg">
+                    🎲 TOUT MÉLANGER
+                </button>
+            </div>
+        </section>
 
-    let currentQueue = [];
-    let currentPerson = null;
-    let score = 0;
-    let timer = null;
-    let timeLeft = 10;
+        <!-- ================= SCREEN 2: GAMEPLAY ================= -->
+        <section id="screen-game" class="w-full max-w-xl flex-col items-center space-y-4 hidden">
+            
+            <div class="w-full flex justify-between items-center bg-gray-900/90 border border-arcade-purple p-3 rounded-xl shadow-md">
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-400 font-arcade">SCORE</span>
+                    <span id="game-score" class="font-arcade text-lg sm:text-xl text-arcade-cyan text-glow-cyan">0</span>
+                </div>
 
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
+                <div class="flex flex-col items-center">
+                    <div class="relative w-12 h-12 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" class="text-gray-800" fill="transparent" />
+                            <circle id="timer-circle" cx="24" cy="24" r="20" stroke="currentColor" stroke-width="4" class="text-arcade-yellow transition-all duration-100 ease-linear" stroke-dasharray="125.6" stroke-dashoffset="0" fill="transparent" />
+                        </svg>
+                        <span id="timer-text" class="absolute font-arcade text-xs text-white">10</span>
+                    </div>
+                </div>
 
-    async function startCategory(cat) {
-        let names = [];
-        if (cat === 'random') {
-            names = [].concat(...Object.values(database));
-        } else {
-            names = database[cat] || [];
+                <div class="flex flex-col items-end">
+                    <span class="text-xs text-gray-400 font-arcade">BEST</span>
+                    <span id="game-best" class="font-arcade text-lg sm:text-xl text-arcade-yellow text-glow-yellow">0</span>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray-900 border-2 border-arcade-purple rounded-2xl p-4 sm:p-6 flex flex-col items-center space-y-4 shadow-2xl relative overflow-hidden">
+                <div class="relative w-48 h-48 sm:w-60 sm:h-60 rounded-xl overflow-hidden border-2 border-arcade-cyan shadow-neon-cyan bg-gray-800 flex items-center justify-center">
+                    <img id="celeb-image" src="" alt="Célébrité" class="w-full h-full object-cover">
+                </div>
+
+                <div class="text-center space-y-1">
+                    <h2 id="celeb-name" class="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase">
+                        Chargement...
+                    </h2>
+                    <p id="celeb-details" class="text-sm sm:text-base text-arcade-cyan font-semibold">
+                        Interrogation de Wikipédia...
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-full grid grid-cols-2 gap-4 pt-2">
+                <button onclick="submitAnswer(true)" class="py-4 sm:py-5 px-4 bg-gradient-to-b from-red-600 to-red-800 border-2 border-arcade-red rounded-xl text-white font-black text-lg sm:text-xl tracking-wider hover:brightness-125 active:scale-95 transition-all shadow-neon-red flex items-center justify-center gap-2">
+                    <span class="text-2xl sm:text-3xl">💀</span> MORT
+                </button>
+                <button onclick="submitAnswer(false)" class="py-4 sm:py-5 px-4 bg-gradient-to-b from-emerald-600 to-emerald-800 border-2 border-arcade-green rounded-xl text-white font-black text-lg sm:text-xl tracking-wider hover:brightness-125 active:scale-95 transition-all shadow-neon-green flex items-center justify-center gap-2">
+                    <span class="text-2xl sm:text-3xl">🚫💀</span> PAS MORT
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 3: GAME OVER ================= -->
+        <section id="screen-gameover" class="w-full max-w-md flex-col items-center text-center space-y-6 hidden">
+            <div class="space-y-2 shake">
+                <h1 class="font-arcade text-4xl sm:text-5xl text-arcade-red text-glow-pink">
+                    GAME OVER
+                </h1>
+                <p id="gameover-reason" class="text-gray-400 text-sm sm:text-base">
+                    Mauvaise réponse !
+                </p>
+            </div>
+
+            <div class="w-full bg-arcade-purple/90 border-2 border-arcade-pink p-6 rounded-2xl shadow-neon-pink space-y-4">
+                <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                    <span class="text-gray-300 font-arcade text-xs">SCORE FINAL</span>
+                    <span id="final-score" class="font-arcade text-2xl text-arcade-yellow text-glow-yellow">0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 font-arcade text-xs">SÉRIE</span>
+                    <span id="final-streak" class="font-arcade text-xl text-arcade-cyan">0</span>
+                </div>
+
+                <div id="arcade-input-container" class="pt-4 border-t border-gray-700 space-y-3">
+                    <label for="player-pseudo" class="block text-xs font-arcade text-gray-300">ENTREZ VOS 5 INITIALES</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="player-pseudo" maxlength="5" placeholder="ARC" class="w-full bg-black border-2 border-arcade-cyan text-arcade-yellow font-arcade text-center text-lg p-2 rounded focus:outline-none focus:ring-2 focus:ring-arcade-yellow uppercase tracking-widest" value="ARCAD">
+                        <button onclick="saveHighScore()" class="px-4 bg-arcade-cyan text-black font-arcade text-xs font-bold rounded hover:bg-white transition-colors">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray-900 border border-arcade-purple p-4 rounded-xl space-y-3">
+                <h3 class="font-arcade text-arcade-yellow text-xs tracking-wider flex items-center justify-center gap-2">
+                    🏆 HALL OF FAME 🏆
+                </h3>
+                <ol id="leaderboard-list" class="space-y-2 font-arcade text-xs text-left">
+                    <!-- Dynamic leaderboards items -->
+                </ol>
+            </div>
+
+            <button onclick="showScreen('start')" class="w-full p-4 bg-arcade-pink text-white font-arcade text-xs rounded-xl hover:bg-white hover:text-black transition-colors shadow-neon-pink font-bold">
+                🔄 REJOUER UNE PARTIE
+            </button>
+        </section>
+
+    </main>
+
+    <footer class="w-full text-center py-4 text-xs text-gray-500 font-mono z-10">
+        Mort ou Pas Mort ? &copy; Arcade Edition • Données dynamiques via Wikipédia API
+    </footer>
+
+    <!-- JavaScript Dynamique (Wikipédia API + Proxy d'images) -->
+    <script>
+        // Listes de célébrités par nom exact d'article Wikipédia français
+        const database = {
+            politique: [
+                "Valéry Giscard d'Estaing", "Jacques Chirac", "Jean-Marie Le Pen", "Joe Biden", 
+                "Angela Merkel", "Kofi Annan", "François Hollande", "Nicolas Sarkozy", 
+                "Dominique Strauss-Kahn", "Laurent Fabius", "Édouard Balladur", "Alain Juppé",
+                "Silvio Berlusconi", "Élisabeth II", "Mikhail Gorbachev"
+            ],
+            chanteurs: [
+                "Johnny Hallyday", "Michel Delpech", "Line Renaud", "Michel Sardou", 
+                "Alain Souchon", "Christophe (chanteur)", "Eddy Mitchell", "Serge Gainsbourg",
+                "Charles Aznavour", "Françoise Hardy", "Patrick Juvet", "Renaud", "Tina Turner"
+            ],
+            tv: [
+                "Jean-Pierre Pernaut", "Michel Drucker", "Patrick Sébastien", "Philippe Gildas", 
+                "Thierry Ardisson", "Jean-Luc Delarue", "William Leymergie", "Denise Fabre",
+                "Évelyne Dhéliat", "Philippe Risoli", "Patrick Sabatier", "Igor Bogdanoff"
+            ],
+            acteur: [
+                "Jean-Paul Belmondo", "Alain Delon", "Pierre Richard", "Brigitte Bardot", 
+                "Claude Brasseur", "Jean Rochefort", "Michel Piccoli", "Gérard Depardieu",
+                "Anouk Aimée", "Catherine Deneuve", "Jean-Pierre Marielle", "Marion Cotillard"
+            ]
+        };
+
+        let currentCategory = 'all';
+        let queue = [];
+        let currentPerson = null;
+        let score = 0;
+        let streak = 0;
+        let bestScore = parseInt(localStorage.getItem('mort_best_score') || '0', 10);
+        
+        let timerVal = 10;
+        let timerInterval = null;
+        const maxTimer = 10;
+
+        function showScreen(screenName) {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-gameover').classList.add('hidden');
+
+            document.getElementById(`screen-${screenName}`).classList.remove('hidden');
+            document.getElementById(`screen-${screenName}`).classList.add('flex');
         }
-        currentQueue = names.sort(() => Math.random() - 0.5);
-        score = 0;
-        document.getElementById('hud-score').innerText = `SCORE: ${score}`;
-        showScreen('screen-game');
-        loadNextPerson();
-    }
 
-    async function loadNextPerson() {
-        clearInterval(timer);
-        if (currentQueue.length === 0) {
-            currentQueue = [].concat(...Object.values(database)).sort(() => Math.random() - 0.5);
+        async function startGame(category) {
+            currentCategory = category;
+            score = 0;
+            streak = 0;
+            
+            document.getElementById('game-score').innerText = score;
+            document.getElementById('game-best').innerText = bestScore;
+
+            let names = [];
+            if (category === 'random') {
+                names = [].concat(...Object.values(database));
+            } else {
+                names = database[category] || [];
+            }
+            
+            queue = names.sort(() => Math.random() - 0.5);
+
+            showScreen('game');
+            await loadNextPerson();
         }
 
-        const name = currentQueue.pop();
-        document.getElementById('celeb-name').innerText = "Chargement...";
-        document.getElementById('celeb-img').src = "";
+        async function loadNextPerson() {
+            clearInterval(timerInterval);
+            
+            if (queue.length === 0) {
+                let names = currentCategory === 'random' 
+                    ? [].concat(...Object.values(database)) 
+                    : database[currentCategory];
+                queue = names.sort(() => Math.random() - 0.5);
+            }
 
-        try {
-            const res = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
-            const data = await res.json();
+            const name = queue.pop();
+            document.getElementById('celeb-name').innerText = "CHARGEMENT...";
+            document.getElementById('celeb-details').innerText = "Interrogation de Wikipédia...";
+            document.getElementById('celeb-image').src = "";
 
-            if (!data.thumbnail || !data.thumbnail.source) {
+            try {
+                // Requête API REST officielle Wikipédia FR
+                const res = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
+                if (!res.ok) {
+                    loadNextPerson();
+                    return;
+                }
+                const data = await res.json();
+
+                // Sécurité : si pas de photo miniature, on passe direct au suivant
+                if (!data.thumbnail || !data.thumbnail.source) {
+                    loadNextPerson();
+                    return;
+                }
+
+                // Contournement des blocages CORS / Hotlinking des images Wikipédia via un proxy public
+                const rawImgUrl = data.thumbnail.source;
+                const safeImgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawImgUrl.replace(/^https?:\/\//, ''))}`;
+
+                // Analyse dynamique du texte Wikipédia pour détecter si la personne est décédée
+                const summaryText = (data.extract || "").toLowerCase();
+                const descText = (data.description || "").toLowerCase();
+                
+                const isDead = summaryText.includes("mort") || 
+                               summaryText.includes("décédé") || 
+                               summaryText.includes("décédée") ||
+                               descText.includes("mort") ||
+                               // Sécurités additionnelles sur les cas avérés
+                               name === "Jean-Marie Le Pen" || name === "Valéry Giscard d'Estaing" || 
+                               name === "Jacques Chirac" || name === "Johnny Hallyday" || 
+                               name === "Michel Delpech" || name === "Christophe (chanteur)" ||
+                               name === "Jean-Pierre Pernaut" || name === "Philippe Gildas" ||
+                               name === "Jean-Paul Belmondo" || name === "Alain Delon" || 
+                               name === "Claude Brasseur" || name === "Kofi Annan" ||
+                               name === "Serge Gainsbourg" || name === "Charles Aznavour" ||
+                               name === "Françoise Hardy" || name === "Patrick Juvet" ||
+                               name === "Jean-Luc Delarue" || name === "Jean Rochefort" ||
+                               name === "Michel Piccoli" || name === "Anouk Aimée" ||
+                               name === "Jean-Pierre Marielle" || name === "Élisabeth II" ||
+                               name === "Silvio Berlusconi" || name === "Mikhail Gorbachev" ||
+                               name === "Tina Turner" || name === "Igor Bogdanoff";
+
+                currentPerson = {
+                    title: data.title,
+                    dead: isDead,
+                    img: safeImgUrl,
+                    description: data.description || "Personnalité publique"
+                };
+
+                document.getElementById('celeb-name').innerText = currentPerson.title;
+                document.getElementById('celeb-details').innerText = currentPerson.description;
+                document.getElementById('celeb-image').src = currentPerson.img;
+                
+                startTimer();
+
+            } catch (e) {
+                // En cas d'erreur réseau, on passe au suivant pour ne pas bloquer le joueur
                 loadNextPerson();
-                return;
             }
-
-            const rawImgUrl = data.thumbnail.source;
-            const safeImgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawImgUrl.replace(/^https?:\/\//, ''))}`;
-
-            const summaryText = data.extract || "";
-            const isDead = summaryText.toLowerCase().includes("mort") || 
-                           summaryText.toLowerCase().includes("décédé") || 
-                           summaryText.toLowerCase().includes("décédée") ||
-                           data.description?.toLowerCase().includes("mort") ||
-                           name === "Jean-Marie Le Pen" || name === "Valéry Giscard d'Estaing" || 
-                           name === "Jacques Chirac" || name === "Johnny Hallyday" || 
-                           name === "Michel Delpech" || name === "Christophe (chanteur)" ||
-                           name === "Jean-Pierre Pernaut" || name === "Philippe Gildas" ||
-                           name === "Jean-Paul Belmondo" || name === "Alain Delon" || 
-                           name === "Claude Brasseur" || name === "Kofi Annan" ||
-                           name === "Serge Gainsbourg" || name === "Charles Aznavour" ||
-                           name === "Françoise Hardy" || name === "Patrick Juvet" ||
-                           name === "Jean-Luc Delarue" || name === "Jean Rochefort" ||
-                           name === "Michel Piccoli" || name === "Anouk Aimée" ||
-                           name === "Jean-Pierre Marielle";
-
-            currentPerson = {
-                title: data.title,
-                dead: isDead,
-                img: safeImgUrl
-            };
-
-            document.getElementById('celeb-name').innerText = currentPerson.title;
-            document.getElementById('celeb-img').src = currentPerson.img;
-            startTimer();
-
-        } catch (e) {
-            loadNextPerson();
         }
-    }
 
-    function startTimer() {
-        timeLeft = 10;
-        const timerEl = document.getElementById('hud-timer');
-        timerEl.innerText = `${timeLeft}s`;
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerVal = 10;
+            updateTimerUI();
 
-        timer = setInterval(() => {
-            timeLeft--;
-            timerEl.innerText = `${timeLeft}s`;
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                gameOver("Temps écoulé !");
+            const startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = (Date.now() - startTime) / 1000;
+                timerVal = Math.max(0, maxTimer - elapsed);
+                updateTimerUI();
+
+                if (timerVal <= 0) {
+                    clearInterval(timerInterval);
+                    gameOver("Temps écoulé ! Trop lent !");
+                }
+            }, 100);
+        }
+
+        function updateTimerUI() {
+            const timerText = document.getElementById('timer-text');
+            const timerCircle = document.getElementById('timer-circle');
+            
+            timerText.innerText = Math.ceil(timerVal);
+
+            const circumference = 2 * Math.PI * 20;
+            const offset = circumference - (timerVal / maxTimer) * circumference;
+            timerCircle.style.strokeDashoffset = offset;
+
+            if (timerVal < 3) {
+                timerCircle.setAttribute('class', 'text-arcade-red transition-all duration-100 ease-linear');
+            } else if (timerVal < 6) {
+                timerCircle.setAttribute('class', 'text-arcade-yellow transition-all duration-100 ease-linear');
+            } else {
+                timerCircle.setAttribute('class', 'text-arcade-green transition-all duration-100 ease-linear');
             }
-        }, 1000);
-    }
+        }
 
-    function answer(playerGuessDead) {
-        clearInterval(timer);
-        if (
+        async function submitAnswer(guessedDead) {
+            clearInterval(timerInterval);
+
+            const isCorrect = (guessedDead === currentPerson.dead);
+
+            if (isCorrect) {
+                const speedBonus = Math.round(timerVal * 100);
+                const pointsGained = 1000 + speedBonus;
+                score += pointsGained;
+                streak++;
+
+                document.getElementById('game-score').innerText = score;
+                if (score > bestScore) {
+                    bestScore = score;
+                    localStorage.setItem('mort_best_score', bestScore.toString());
+                    document.getElementById('game-best').innerText = bestScore;
+                }
+
+                await loadNextPerson();
+            } else {
+                let statusText = currentPerson.dead ? "est MORT(E)" : "est EN VIE !";
+                gameOver(`Faux ! ${currentPerson.title} ${statusText}`);
+            }
+        }
+
+        function gameOver(reason) {
+            clearInterval(timerInterval);
+            
+            document.getElementById('gameover-reason').innerText = reason;
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-streak').innerText = streak;
+
+            const inputContainer = document.getElementById('arcade-input-container');
+            if (score > 0) {
+                inputContainer.classList.remove('hidden');
+            } else {
+                inputContainer.classList.add('hidden');
+            }
+
+            renderLeaderboard();
+            showScreen('gameover');
+        }
+
+        function getHighScores() {
+            const raw = localStorage.getItem('mort_leaderboard');
+            if (!raw) {
+                return [
+                    { pseudo: "CHAMP", score: 15000 },
+                    { pseudo: "RETRO", score: 8500 },
+                    { pseudo: "PIXEL", score: 4000 }
+                ];
+            }
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveHighScore() {
+            const input = document.getElementById('player-pseudo');
+            let pseudo = (
