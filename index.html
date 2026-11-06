@@ -6,9 +6,9 @@
     <title>Mort ou Pas Mort ?</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,18 +19,20 @@
         }
         .container {
             width: 100%;
-            max-width: 500px;
-            background: white;
+            max-width: 480px;
+            background: #2a2a2a;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            border-radius: 10px;
             box-sizing: border-box;
             text-align: center;
+            border: 2px solid #444;
         }
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 20px;
-            color: #111;
+            color: #ff5555;
+            text-transform: uppercase;
         }
         .hud {
             display: flex;
@@ -38,20 +40,24 @@
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 15px;
+            background: #111;
+            padding: 8px 12px;
+            border-radius: 5px;
         }
         .timer {
-            color: #d9534f;
+            color: #ff5555;
         }
         .photo-box {
             width: 100%;
-            height: 320px;
-            background: #eee;
+            height: 300px;
+            background: #000;
             border-radius: 6px;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 15px;
+            border: 1px solid #444;
         }
         .photo-box img {
             width: 100%;
@@ -59,32 +65,35 @@
             object-fit: cover;
         }
         .name {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: bold;
             margin-bottom: 20px;
+            color: #55ffcc;
         }
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         .btn {
             flex: 1;
             padding: 15px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             color: white;
+            text-transform: uppercase;
         }
         .btn-alive {
-            background-color: #5cb85c;
+            background-color: #2e8b57;
         }
         .btn-dead {
-            background-color: #d9534f;
+            background-color: #b22222;
         }
         .btn:active {
             opacity: 0.8;
+            transform: scale(0.98);
         }
         .category-grid {
             display: flex;
@@ -92,15 +101,19 @@
             gap: 10px;
         }
         .btn-cat {
-            background: #007bff;
-            color: white;
+            background: #333;
+            color: #fff;
             padding: 15px;
             font-size: 1.1rem;
-            border: none;
+            border: 1px solid #555;
             border-radius: 6px;
             cursor: pointer;
             text-align: left;
             font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-cat:hover {
+            background: #444;
         }
         .screen {
             display: none;
@@ -110,22 +123,28 @@
         }
         .initials-input {
             font-size: 1.5rem;
-            width: 40px;
+            width: 45px;
+            height: 45px;
             text-align: center;
             text-transform: uppercase;
+            background: #111;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
         }
         .highscores {
             margin-top: 15px;
             text-align: left;
-            background: #f9f9f9;
+            background: #1a1a1a;
             padding: 10px;
             border-radius: 4px;
+            border: 1px solid #444;
         }
         .highscore-row {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px solid #eee;
+            padding: 6px 0;
+            border-bottom: 1px solid #333;
         }
     </style>
 </head>
@@ -135,7 +154,7 @@
     <!-- ÉCRAN ACCUEIL -->
     <div id="screen-home" class="screen active">
         <h1>💀 MORT OU PAS MORT ? 💀</h1>
-        <p style="margin-bottom: 20px; color: #666;">Choisis ta catégorie (10s par photo, erreur fatale !)</p>
+        <p style="margin-bottom: 20px; color: #aaa; font-size: 0.9rem;">Choisis ta catégorie (10s par photo, erreur fatale !)</p>
         <div class="category-grid">
             <button class="btn-cat" onclick="startCategory('politique')">🏛️ Politique</button>
             <button class="btn-cat" onclick="startCategory('chanteurs')">🎤 Chanteurs</button>
@@ -163,12 +182,12 @@
 
     <!-- ÉCRAN GAME OVER -->
     <div id="screen-gameover" class="screen">
-        <h1>GAME OVER</h1>
-        <p id="gameover-reason" style="color: #d9534f; font-weight: bold;"></p>
-        <h2 id="final-score">SCORE : 0</h2>
+        <h1 style="color: #ff5555;">GAME OVER</h1>
+        <p id="gameover-reason" style="color: #ff9999; font-weight: bold;"></p>
+        <h2 id="final-score" style="color: #55ffcc;">SCORE : 0</h2>
 
         <div id="score-section" style="margin: 15px 0;">
-            <p>Entre tes 5 initiales :</p>
+            <p style="color: #aaa;">Entre tes 5 initiales :</p>
             <div style="display: flex; justify-content: center; gap: 5px;">
                 <input type="text" maxlength="1" class="initials-input" id="c1" value="A">
                 <input type="text" maxlength="1" class="initials-input" id="c2" value="R">
@@ -176,7 +195,7 @@
                 <input type="text" maxlength="1" class="initials-input" id="c4" value="A">
                 <input type="text" maxlength="1" class="initials-input" id="c5" value="D">
             </div>
-            <button class="btn" style="background: #333; margin-top: 10px; width: 100%;" onclick="saveScore()">Enregistrer le score</button>
+            <button class="btn" style="background: #555; margin-top: 10px; width: 100%;" onclick="saveScore()">Enregistrer</button>
         </div>
 
         <div class="highscores" id="highscores-list"></div>
@@ -186,7 +205,6 @@
 </div>
 
 <script>
-    // Listes de pages Wikipédia cibles par catégorie (titres exacts des articles FR)
     const database = {
         politique: [
             "Valéry Giscard d'Estaing", "Jacques Chirac", "Jean-Marie Le Pen", "Joe Biden", 
@@ -195,8 +213,8 @@
         ],
         chanteurs: [
             "Johnny Hallyday", "Michel Delpech", "Line Renaud", "Michel Sardou", 
-            "Alain Souchon", "Christophe (chanteur)", "Eddy Mitchell", "Hervé Cristiani",
-            "Serge Gainsbourg", "Charles Aznavour", "Françoise Hardy", "Patrick Juvet"
+            "Alain Souchon", "Christophe (chanteur)", "Eddy Mitchell", "Serge Gainsbourg", 
+            "Charles Aznavour", "Françoise Hardy", "Patrick Juvet"
         ],
         tv: [
             "Jean-Pierre Pernaut", "Michel Drucker", "Patrick Sébastien", "Philippe Gildas", 
@@ -224,12 +242,10 @@
     async function startCategory(cat) {
         let names = [];
         if (cat === 'random') {
-            Object.values(database.politique, database.chanteurs, database.tv, database.acteur).forEach(arr => {});
             names = [].concat(...Object.values(database));
         } else {
             names = database[cat] || [];
         }
-        // Mélanger la liste
         currentQueue = names.sort(() => Math.random() - 0.5);
         score = 0;
         document.getElementById('hud-score').innerText = `SCORE: ${score}`;
@@ -240,7 +256,6 @@
     async function loadNextPerson() {
         clearInterval(timer);
         if (currentQueue.length === 0) {
-            // Si on a épuisé la liste, on recharge
             currentQueue = [].concat(...Object.values(database)).sort(() => Math.random() - 0.5);
         }
 
@@ -249,34 +264,33 @@
         document.getElementById('celeb-img').src = "";
 
         try {
-            // Appel direct à l'API résumé Wikipédia
             const res = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
             const data = await res.json();
 
-            // Sécurité : si pas de photo valide, on passe au suivant direct
             if (!data.thumbnail || !data.thumbnail.source) {
                 loadNextPerson();
                 return;
             }
 
-            // Contournement CORS pour l'affichage de l'image via un proxy d'image public gratuit
             const rawImgUrl = data.thumbnail.source;
             const safeImgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawImgUrl.replace(/^https?:\/\//, ''))}`;
 
-            // Détection du décès via l'extrait ou les données textuelles de Wikipédia
-            // L'API summary contient parfois "died" ou une date de décès, ou on vérifie si un texte de décès est présent
             const summaryText = data.extract || "";
             const isDead = summaryText.toLowerCase().includes("mort") || 
                            summaryText.toLowerCase().includes("décédé") || 
                            summaryText.toLowerCase().includes("décédée") ||
                            data.description?.toLowerCase().includes("mort") ||
-                           // Cas spécifiques connus gérés manuellement si l'API est ambigue
                            name === "Jean-Marie Le Pen" || name === "Valéry Giscard d'Estaing" || 
                            name === "Jacques Chirac" || name === "Johnny Hallyday" || 
                            name === "Michel Delpech" || name === "Christophe (chanteur)" ||
                            name === "Jean-Pierre Pernaut" || name === "Philippe Gildas" ||
                            name === "Jean-Paul Belmondo" || name === "Alain Delon" || 
-                           name === "Claude Brasseur" || name === "Kofi Annan";
+                           name === "Claude Brasseur" || name === "Kofi Annan" ||
+                           name === "Serge Gainsbourg" || name === "Charles Aznavour" ||
+                           name === "Françoise Hardy" || name === "Patrick Juvet" ||
+                           name === "Jean-Luc Delarue" || name === "Jean Rochefort" ||
+                           name === "Michel Piccoli" || name === "Anouk Aimée" ||
+                           name === "Jean-Pierre Marielle";
 
             currentPerson = {
                 title: data.title,
@@ -289,7 +303,6 @@
             startTimer();
 
         } catch (e) {
-            // En cas d'erreur réseau, on skip
             loadNextPerson();
         }
     }
@@ -311,64 +324,4 @@
 
     function answer(playerGuessDead) {
         clearInterval(timer);
-        if (playerGuessDead === currentPerson.dead) {
-            score += 10 + (timeLeft * 2);
-            document.getElementById('hud-score').innerText = `SCORE: ${score}`;
-            loadNextPerson();
-        } else {
-            const status = currentPerson.dead ? "est MORT(E)" : "est EN VIE";
-            gameOver(`${currentPerson.title} ${status} !`);
-        }
-    }
-
-    function gameOver(reason) {
-        clearInterval(timer);
-        document.getElementById('gameover-reason').innerText = reason;
-        document.getElementById('final-score').innerText = `SCORE : ${score}`;
-        document.getElementById('score-section').style.display = 'block';
-        showScreen('screen-gameover');
-        loadHighscores();
-    }
-
-    function loadHighscores() {
-        let scores = JSON.parse(localStorage.getItem('mort_scores') || '[]');
-        scores.sort((a, b) => b.score - a.score);
-        
-        const list = document.getElementById('highscores-list');
-        if (scores.length === 0) {
-            list.innerHTML = '<div style="text-align:center; color:#777;">Aucun score</div>';
-            return;
-        }
-
-        list.innerHTML = '<strong>HALL OF FAME</strong>' + scores.slice(0, 5).map((s, i) => `
-            <div class="highscore-row">
-                <span>#${i+1} ${s.name}</span>
-                <span>${s.score} pts</span>
-            </div>
-        `).join('');
-    }
-
-    function saveScore() {
-        const c1 = document.getElementById('c1').value || 'A';
-        const c2 = document.getElementById('c2').value || 'R';
-        const c3 = document.getElementById('c3').value || 'C';
-        const c4 = document.getElementById('c4').value || 'A';
-        const c5 = document.getElementById('c5').value || 'D';
-        const initials = (c1 + c2 + c3 + c4 + c5).toUpperCase();
-
-        let scores = JSON.parse(localStorage.getItem('mort_scores') || '[]');
-        scores.push({ name: initials, score: score });
-        scores.sort((a, b) => b.score - a.score);
-        localStorage.setItem('mort_scores', JSON.stringify(scores.slice(0, 10)));
-
-        document.getElementById('score-section').style.display = 'none';
-        loadHighscores();
-    }
-
-    function goHome() {
-        showScreen('screen-home');
-    }
-</script>
-
-</body>
-</html>
+        if (
